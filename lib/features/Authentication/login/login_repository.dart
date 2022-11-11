@@ -5,11 +5,11 @@ import '../../../common/constant/app_urls.dart';
 import '../../../networking/CustomException.dart';
 import 'login_model.dart';
 
-class ClientRepository {
+class LoginRepository {
   ApiBaseHelper _helper = ApiBaseHelper();
 
-  Future<List<Clients>?> fetchMovieList() async {
-    final response = await _helper.get(ApiUrls.listNames);
-    return ClientDetails.fromJson(response).clients;
+  Future<SignInUser?> fetchClientList(body) async {
+    final response = await _helper.post(ApiUrls.signIn, body);
+    return SignInUser.fromJson(response['user']);
   }
 }

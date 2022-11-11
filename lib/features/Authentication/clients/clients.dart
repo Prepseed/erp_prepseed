@@ -1,65 +1,56 @@
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../common/constant/color_palate.dart';
 import '../../../common/widgets/exceptionHandler_widgets.dart';
 import '../../../networking/response.dart';
-import 'login_bloc.dart';
-import 'login_model.dart';
+import 'clients_provider.dart';
+import 'clients_model.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class LoginScreen extends StatefulWidget {
+class ClientScreen extends StatefulWidget {
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  _ClientScreenState createState() => _ClientScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
-  LoginBloc _bloc = LoginBloc();
+class _ClientScreenState extends State<ClientScreen> {
 
   @override
   void initState() {
     super.initState();
-    _bloc = LoginBloc();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      Provider.of<ClientsProvider>(context, listen: false).getAllClients();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Constants.backgroundColor,
-      body: RefreshIndicator(
-        onRefresh: () => _bloc.fetchMovieList(),
-        child: StreamBuilder<dynamic>(
-          stream: _bloc.movieListStream,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              switch (snapshot.data!.status) {
-                case Status.LOADING:
-                  return Loading(loadingMessage: snapshot.data!.message);
-                  break;
-                case Status.COMPLETED:
-                  return ClientList(clientList: snapshot.data!.data);
-                  break;
-                case Status.ERROR:
-                  return Error(
-                    errorMessage: snapshot.data!.message,
-                    onRetryPressed: () => _bloc.fetchMovieList(),
-                  );
-                  break;
-              }
-            }
-            return Container();
-          },
-        ),
+/*      appBar: AppBar(
+        title: const Text('Provider API'),
+      ),*/
+      body: Consumer<ClientsProvider>(
+        builder: (context, value, child) {
+          if (value.isLoading) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          final clients = value.clients;
+          return ClientList(clientList: clients,);
+        },
       ),
     );
   }
 
   @override
   void dispose() {
-    _bloc.dispose();
     super.dispose();
   }
 }
+
+
 
 class ClientList extends StatefulWidget {
   final List<Clients>? clientList;

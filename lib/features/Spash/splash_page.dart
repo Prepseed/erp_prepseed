@@ -2,7 +2,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../common/constant/color_palate.dart';
-import '../Authentication/clients/login.dart';
+import '../Authentication/clients/clients.dart';
+import '../Authentication/login/login.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
