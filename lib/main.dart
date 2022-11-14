@@ -1,3 +1,4 @@
+import 'package:erp_prepseed/features/Leaves/dashboard.dart';
 import 'package:flutter/material.dart';
 
 import 'features/Leaves/leaves_request.dart';
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: LeaveAndReportPage(),
+      home: Dashboard(),
     );
   }
 }
