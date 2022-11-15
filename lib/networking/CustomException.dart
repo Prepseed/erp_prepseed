@@ -23,8 +23,13 @@ class ApiBaseHelper {
   Future<dynamic> post(String url, dynamic body) async {
     print('Api Post, url $url');
     var responseJson;
+    var headers = {
+      'Content-type' : 'application/json',
+    };
     try {
-      final response = await http.post(Uri.parse(url), body: body);
+      final response = await http.post(Uri.parse(url),
+          headers: headers,
+          body: body);
       responseJson = _returnResponse(response);
     } on SocketException {
       print('No net');

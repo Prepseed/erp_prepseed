@@ -1,49 +1,51 @@
 
-import 'package:erp_prepseed/features/Leaves/dashboard.dart';
-
-import 'package:erp_prepseed/features/Authentication/clients/clients.dart';
-import 'package:erp_prepseed/features/Authentication/clients/clients_provider.dart';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'features/Authentication/login/login.dart';
-import 'features/Authentication/login/login_provider.dart';
+import '../../../common/constant/color_palate.dart';
+import '../../../common/widgets/exceptionHandler_widgets.dart';
+import '../../../networking/response.dart';
+import 'login_provider.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'login_model.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-import 'features/Leaves/leaves_request.dart';
-
-void main() {
-  runApp(const MyApp());
+class LoginScreen extends StatefulWidget {
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class _LoginScreenState extends State<LoginScreen> {
+
+  TextEditingController _email = TextEditingController();
+  TextEditingController _password = TextEditingController();
 
   @override
-  Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider<ClientsProvider>(create: (_) => ClientsProvider(),),
-        ChangeNotifierProvider<LoginProvider>(create: (_) => LoginProvider(),),
-      ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        routes: <String, WidgetBuilder>{
-          '/signup': (BuildContext context) => LoginScreen()
-        },
-        home: LoginScreen(),
-      ),
-    );
+  void initState() {
+    super.initState();
+
   }
-}
 
+  Widget toast = Container(
+    padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(25.0),
+      color: Colors.greenAccent,
+    ),
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(Icons.check),
+        SizedBox(
+          width: 12.0,
+        ),
+        Text("This is a Custom Toast"),
+      ],
+    ),
+  );
 
-class MyHomePage extends StatefulWidget {
-  @override
-  _MyHomePageState createState() => new _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -80,6 +82,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Column(
                   children: <Widget>[
                     TextField(
+                      controller: _email,
                       decoration: InputDecoration(
                           labelText: 'EMAIL',
                           labelStyle: TextStyle(
@@ -91,6 +94,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                     SizedBox(height: 20.0),
                     TextField(
+                      controller: _password,
                       decoration: InputDecoration(
                           labelText: 'PASSWORD',
                           labelStyle: TextStyle(
@@ -125,8 +129,37 @@ class _MyHomePageState extends State<MyHomePage> {
                         color: Colors.green,
                         elevation: 7.0,
                         child: GestureDetector(
-                          onTap: () {},
-                          child: Center(
+                          onTap: () {
+                            var bodyData = {
+                              "user":
+                              {
+                                "email": _email.text.toString(),
+                                "password": _password.text.toString()
+                              },
+                              "portal":"preparation"
+                            };
+                            if(_email.text.isNotEmpty && _password.text.isNotEmpty){
+                            WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                              Provider.of<LoginProvider>(context, listen: false).grantAccess(json.encode(bodyData));
+                            });
+                            }else{
+                              print('Authenticate fails');
+                              FToast().showToast(child: toast,
+                                toastDuration: Duration(seconds: 2),
+                                  positionedToastBuilder: (context, child) {
+                                    return Positioned(
+                                      child: child,
+                                      top: 16.0,
+                                      left: 16.0,
+                                    );
+                                  }
+
+                            );
+
+
+                            }
+                          },
+                          child: const Center(
                             child: Text(
                               'LOGIN',
                               style: TextStyle(
@@ -171,5 +204,10 @@ class _MyHomePageState extends State<MyHomePage> {
             )
           ],
         ));
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }
