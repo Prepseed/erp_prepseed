@@ -494,6 +494,11 @@ class _LeaveAndReportState extends State<LeaveAndReport> {
                  // leavesData[i] = DateFormat('MM-dd-yyyy').format(days[i]) + type[i] + fullDays[i];
                 }
                 print(leavesReq);
+                List list = [];
+                leavesReq.forEach((element) {
+                  list.add(element.values.toList());
+                });
+                print(list);
                 fromController.clear();
                 toController.clear();
                 reasonController.clear();
