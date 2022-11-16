@@ -1,7 +1,10 @@
 import 'dart:async';
+import 'package:erp_prepseed/features/Leaves/dashboard.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../common/constant/color_palate.dart';
+import '../../common/constant/sharedPref.dart';
 import '../Authentication/clients/clients.dart';
 import '../Authentication/login/login.dart';
 
@@ -14,7 +17,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
 
   AnimationController? controller;
   Animation<double>? animation;
-
+  String? userId;
   @override
   initState()  {
     super.initState();
@@ -22,7 +25,15 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
         duration: const Duration(milliseconds: 1000), vsync: this);
     animation = CurvedAnimation(parent: controller!, curve: Curves.easeIn);
     controller!.forward();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      userId = prefs.getString('userId');
+      setState(() {
+        userId = userId;
+      });
+    });
     timer();
+
   }
 
 /*  callProvidersPre() async{
@@ -39,10 +50,9 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
   }
 
   Future<void> timer() async {
-/*    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var username = prefs.getString('username');
-    var InstituteName = prefs.getString('InstituteName');
-    var InstituteLogo = prefs.getString('InstituteLogo');*/
+
+
+
 
 /*     if((InstituteName != null) && (InstituteLogo != null) && (username != null)){
      callProvidersPre();
@@ -50,13 +60,9 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
     }
   */
     Timer(Duration(seconds: 1), () => Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (BuildContext context) => LoginScreen()
-        )));
-
-
-        /*((InstituteName == null) || (InstituteLogo == null) || (username == null)) ? prepSeed_login() :
-        (username == null || username == '') ? signIn_signUp(clientname: InstituteName,clientlogo: InstituteLogo,) :
-        landingScreen()  )));*/
+        MaterialPageRoute(builder: (BuildContext context) =>
+        (userId == null || userId == '') ? LoginScreen() :
+        Dashboard() )));
   }
 
   @override
@@ -77,7 +83,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
                     child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children:[
-                          Image.asset('assets/images/logo.png')
+                          Image.asset('assets/images/logo.png',height: 60.0,)
                         ]
                     )
                 )

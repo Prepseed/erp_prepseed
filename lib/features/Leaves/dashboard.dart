@@ -1,6 +1,8 @@
 import 'package:erp_prepseed/features/Leaves/leave_list.dart';
+import 'package:erp_prepseed/features/Leaves/leave_req_provider.dart';
 import 'package:erp_prepseed/features/Leaves/leaves_request.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -36,8 +38,9 @@ class _DashboardState extends State<Dashboard> {
                 ),
               ),
             ),
-            onTap: (){
-              Navigator.of(context).push(MaterialPageRoute(
+            onTap: () async {
+              await Provider.of<LeaveReqProvider>(context,listen: false).getLeaves();
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
                   builder: (context) => LeaveLists())
               );
             }

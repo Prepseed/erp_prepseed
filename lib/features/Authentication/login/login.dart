@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import '../../../common/constant/color_palate.dart';
 import '../../../common/widgets/exceptionHandler_widgets.dart';
 import '../../../networking/response.dart';
+import '../../Leaves/dashboard.dart';
 import 'login_provider.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'login_model.dart';
@@ -129,7 +130,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         color: Colors.green,
                         elevation: 7.0,
                         child: GestureDetector(
-                          onTap: () {
+                          onTap: () async {
                             var bodyData = {
                               "user":
                               {
@@ -139,9 +140,14 @@ class _LoginScreenState extends State<LoginScreen> {
                               "portal":"preparation"
                             };
                             if(_email.text.isNotEmpty && _password.text.isNotEmpty){
-                            WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                              Provider.of<LoginProvider>(context, listen: false).grantAccess(json.encode(bodyData));
+                             WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+                              await Provider.of<LoginProvider>(context, listen: false).grantAccess(json.encode(bodyData));
+                              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                                builder: (context) =>  Dashboard(),
+                              ));
                             });
+
+
                             }else{
                               print('Authenticate fails');
                               FToast().showToast(child: toast,
@@ -153,10 +159,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       left: 16.0,
                                     );
                                   }
-
                             );
-
-
                             }
                           },
                           child: const Center(

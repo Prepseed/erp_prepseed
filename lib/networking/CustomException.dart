@@ -2,15 +2,21 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 
+import '../common/constant/sharedPref.dart';
 import 'app_exception.dart';
 
 class ApiBaseHelper {
 
   Future<dynamic> get(String url) async {
+    var token =  await sharedPref().getSharedPref('token');
     print('Api Get, url $url');
+    var headers =   {
+      'Content-type' : 'application/json',
+      'authorization': 'Bearer $token',
+    };
     var responseJson;
     try {
-      final response = await http.get(Uri.parse(url));
+      final response = await http.get(Uri.parse(url),headers: headers);
       responseJson = _returnResponse(response);
     } on SocketException {
       print('No net');
@@ -20,11 +26,15 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-  Future<dynamic> post(String url, dynamic body) async {
+  Future<dynamic> post(String url, dynamic body, [bool auth = false]) async {
+    var token = auth ? null : await sharedPref().getSharedPref('token');
     print('Api Post, url $url');
     var responseJson;
-    var headers = {
+    var headers = auth ? {
       'Content-type' : 'application/json',
+    } : {
+      'Content-type' : 'application/json',
+    'authorization': 'Bearer $token',
     };
     try {
       final response = await http.post(Uri.parse(url),
