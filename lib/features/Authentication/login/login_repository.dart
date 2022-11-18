@@ -17,6 +17,7 @@ class LoginRepository {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('token',response["token"]);
     await prefs.setString('userId',response['user']["_id"]);
+    await prefs.setString('Role', response['user']['role']);
     return SignInUser.fromJson(response['user']);
   }
 }

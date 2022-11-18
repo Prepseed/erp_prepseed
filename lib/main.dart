@@ -1,9 +1,10 @@
 
-import 'package:erp_prepseed/features/Leaves/dashboard.dart';
+
 
 import 'package:erp_prepseed/features/Authentication/clients/clients.dart';
 import 'package:erp_prepseed/features/Authentication/clients/clients_provider.dart';
-import 'package:erp_prepseed/features/Leaves/leave_req_provider.dart';
+import 'package:erp_prepseed/features/Teacher/Leaves/leave_list.dart';
+
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -11,7 +12,7 @@ import 'package:provider/provider.dart';
 import 'features/Authentication/login/login.dart';
 import 'features/Authentication/login/login_provider.dart';
 
-import 'features/Leaves/leaves_request.dart';
+import 'features/Teacher/Leaves/leave_req_provider.dart';
 import 'features/Spash/splash_page.dart';
 
 void main() {
@@ -33,8 +34,9 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         routes: <String, WidgetBuilder>{
           '/signup': (BuildContext context) => LoginScreen(),
+          '/employeeLeaveList' :(BuildContext context) => LeaveLists()
         },
-        home: SplashScreen(),
+        home: LoginScreen(),
       ),
     );
   }

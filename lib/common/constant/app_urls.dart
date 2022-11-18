@@ -1,6 +1,6 @@
 class ApiUrls {
   static String STATIC_URL = "https://static.prepseed.com";
-  static String BASEURL = /*'https://napi.prepseed.com';*/ 'http://192.168.29.183:4040/api'; //'http://192.168.29.254:4040/api';
+  static String BASEURL = 'https://napi.prepseed.com'; /*'http://192.168.29.183:4040/api'*/ //'http://192.168.29.254:4040/api';
 
   static String CLIENT_BASE = BASEURL + "/clients";
   static String USER_BASE = BASEURL + "/users";

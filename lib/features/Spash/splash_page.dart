@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:erp_prepseed/features/Leaves/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -7,6 +6,7 @@ import '../../common/constant/color_palate.dart';
 import '../../common/constant/sharedPref.dart';
 import '../Authentication/clients/clients.dart';
 import '../Authentication/login/login.dart';
+import '../Teacher/Leaves/dashboard.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -33,7 +33,6 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
       });
     });
     timer();
-
   }
 
 /*  callProvidersPre() async{
@@ -62,7 +61,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
     Timer(Duration(seconds: 1), () => Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (BuildContext context) =>
         (userId == null || userId == '') ? LoginScreen() :
-        Dashboard() )));
+        Dashboard([]) )));
   }
 
   @override

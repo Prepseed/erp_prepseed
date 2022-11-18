@@ -3,11 +3,14 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../common/constant/color_palate.dart';
+import '../../../common/constant/sharedPref.dart';
 import '../../../common/widgets/exceptionHandler_widgets.dart';
 import '../../../networking/response.dart';
-import '../../Leaves/dashboard.dart';
+
+import '../../Teacher/Leaves/dashboard.dart';
 import 'login_provider.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'login_model.dart';
@@ -46,7 +49,13 @@ class _LoginScreenState extends State<LoginScreen> {
       ],
     ),
   );
-
+  List<Map> hr = [{'name' : 'Manage Leaves', 'routes' : '/employeeLeaveList'},
+    {'name' : 'Files Management', 'routes' : ''},
+    {'name' : 'Payroll Management', 'routes' : ''},
+    {'name' : 'Expenses Management', 'routes' : ''}];
+  List<Map> mentor = [
+    {'name' : 'Add/Request Leaves', 'routes' :'/employeeLeaveList'}, {'name' : 'Attendance Management','routes' : ''}
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -142,8 +151,13 @@ class _LoginScreenState extends State<LoginScreen> {
                             if(_email.text.isNotEmpty && _password.text.isNotEmpty){
                              WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
                               await Provider.of<LoginProvider>(context, listen: false).grantAccess(json.encode(bodyData));
+                              SharedPreferences prefs = await SharedPreferences.getInstance();
+                              var role = prefs.getString('Role');
+                              print(role);
+                              var role1 = await sharedPref().getSharedPref('role');
+                              print(role1);
                               Navigator.of(context).pushReplacement(MaterialPageRoute(
-                                builder: (context) =>  Dashboard(),
+                                builder: (context) =>  Dashboard(role == "mentor" ? mentor : role == "hr" ? hr : []),
                               ));
                             });
 
