@@ -22,6 +22,16 @@ class LeaveReqProvider extends ChangeNotifier{
     notifyListeners();
   }
 
+  leaves() async{
+    userId = await sharedPref().getSharedPref('userId');
+    String url = "https://napi.prepseed.com/leaves?startDate=11/21/2022&endDate=12/31/2022";
+    final response = await _helper.get(url);
+    leavesModel = LeavesModel.fromJson(response);
+    print(leavesModel);
+    notifyListeners();
+  }
+
+
   String? msg;
   leaveReq(body) async {
       final response = await _helper.post("https://napi.prepseed.com/leaves/request", body);
@@ -31,5 +41,12 @@ class LeaveReqProvider extends ChangeNotifier{
       getLeaves(role == 'hr' ? true : false);
       print(msg);
       notifyListeners();
+  }
+
+  leaveAction(String id, String date, String action) async {
+    final response = await _helper.put("https://napi.prepseed.com/leaves/request?leaveId=$id&date=$date&action=$action");
+    print(response);
+    getLeaves(true);
+    notifyListeners();
   }
 }

@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -25,9 +26,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
   TextEditingController _email = TextEditingController();
   TextEditingController _password = TextEditingController();
-
+  bool _passwordVisible = false;
   @override
   void initState() {
+    _passwordVisible = false;
     super.initState();
 
   }
@@ -56,6 +58,8 @@ class _LoginScreenState extends State<LoginScreen> {
   List<Map> mentor = [
     {'name' : 'Add/Request Leaves', 'routes' :'/employeeLeaveList'}, {'name' : 'Attendance Management','routes' : ''}
   ];
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -92,6 +96,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Column(
                   children: <Widget>[
                     TextField(
+                      style: TextStyle(
+                          fontFamily: 'Montserrat',
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey
+                      ),
                       controller: _email,
                       decoration: InputDecoration(
                           labelText: 'EMAIL',
@@ -104,16 +113,31 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     SizedBox(height: 20.0),
                     TextField(
+                      style: TextStyle(
+                          fontFamily: 'Montserrat',
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey
+                      ),
                       controller: _password,
+                      obscureText: !_passwordVisible,
                       decoration: InputDecoration(
                           labelText: 'PASSWORD',
                           labelStyle: TextStyle(
                               fontFamily: 'Montserrat',
                               fontWeight: FontWeight.bold,
                               color: Colors.grey),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _passwordVisible
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                              color: Theme.of(context).primaryColorDark,
+                            ), onPressed: () { setState(() {
+                            _passwordVisible = !_passwordVisible;
+                          }); },
+                          ),
                           focusedBorder: UnderlineInputBorder(
                               borderSide: BorderSide(color: Colors.green))),
-                      obscureText: true,
                     ),
                     SizedBox(height: 5.0),
                     Container(
@@ -161,7 +185,6 @@ class _LoginScreenState extends State<LoginScreen> {
                               ));
                             });
 
-
                             }else{
                               print('Authenticate fails');
                               FToast().showToast(child: toast,
@@ -176,14 +199,21 @@ class _LoginScreenState extends State<LoginScreen> {
                             );
                             }
                           },
-                          child: const Center(
-                            child: Text(
-                              'LOGIN',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'Montserrat'),
-                            ),
+                          child:  Consumer<LoginProvider>(
+                            builder: (_,loginModel,model) {
+                              return  Center(
+                                child: (!loginModel.isLoading)? Text(
+                                  'LOGIN',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: 'Montserrat'),
+                                ): SpinKitThreeBounce(
+                                color: Colors.white,
+                                size: 30.0,
+                              ),
+                              );
+                            }
                           ),
                         ),
                       ),

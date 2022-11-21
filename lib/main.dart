@@ -14,7 +14,7 @@ import 'features/Authentication/login/login_provider.dart';
 
 import 'features/Teacher/Leaves/leave_req_provider.dart';
 import 'features/Spash/splash_page.dart';
-
+final navigatorKey = GlobalKey<NavigatorState>();
 void main() {
   runApp(const MyApp());
 }
@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
           '/signup': (BuildContext context) => LoginScreen(),
           '/employeeLeaveList' :(BuildContext context) => LeaveLists()
         },
-        home: LoginScreen(),
+        home: SplashScreen(),
       ),
     );
   }

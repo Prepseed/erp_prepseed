@@ -18,6 +18,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
   AnimationController? controller;
   Animation<double>? animation;
   String? userId;
+  var role;
   @override
   initState()  {
     super.initState();
@@ -28,8 +29,10 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       userId = prefs.getString('userId');
+      role = prefs.getString('Role');
       setState(() {
         userId = userId;
+        role = role;
       });
     });
     timer();
@@ -50,7 +53,13 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
 
   Future<void> timer() async {
 
-
+    List<Map> hr = [{'name' : 'Manage Leaves', 'routes' : '/employeeLeaveList'},
+      {'name' : 'Files Management', 'routes' : ''},
+      {'name' : 'Payroll Management', 'routes' : ''},
+      {'name' : 'Expenses Management', 'routes' : ''}];
+    List<Map> mentor = [
+      {'name' : 'Add/Request Leaves', 'routes' :'/employeeLeaveList'}, {'name' : 'Attendance Management','routes' : ''}
+    ];
 
 
 /*     if((InstituteName != null) && (InstituteLogo != null) && (username != null)){
@@ -61,7 +70,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
     Timer(Duration(seconds: 1), () => Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (BuildContext context) =>
         (userId == null || userId == '') ? LoginScreen() :
-        Dashboard([]) )));
+        Dashboard(role == "mentor" ? mentor : role == "hr" ? hr : []) )));
   }
 
   @override

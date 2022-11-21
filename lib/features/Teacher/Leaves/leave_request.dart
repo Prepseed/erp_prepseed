@@ -1,227 +1,199 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:erp_prepseed/features/Teacher/Leaves/leaves_model.dart';
 import 'package:flutter/material.dart';
-
-import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'dashboard.dart';
-import 'leave_list.dart';
+import 'package:intl/intl.dart';
 import 'leave_req_provider.dart';
-import 'leaves_model.dart';
-import 'add_new_leaves_request.dart';
 
-class LeavesAction extends StatefulWidget {
-  const LeavesAction({Key? key}) : super(key: key);
+class LeaveRequest extends StatefulWidget {
+  const LeaveRequest({Key? key}) : super(key: key);
 
   @override
-  State<LeavesAction> createState() => _LeavesActionState();
+  State<LeaveRequest> createState() => _LeaveRequestState();
 }
 
-class _LeavesActionState extends State<LeavesAction> {
+class _LeaveRequestState extends State<LeaveRequest> {
+
   var role;
-  var userId;
   @override
   void initState() {
     SharedPreferences pref;
     Future.microtask(() async => {
       pref = await SharedPreferences.getInstance(),
       role = pref.getString('Role'),
-      userId = pref.getString('userId'),
-      await Provider.of<LeaveReqProvider>(context,listen: false).leaves()
+      await Provider.of<LeaveReqProvider>(context,listen: false).getLeaves(role == 'hr' ? true : false)
     });
     super.initState();
   }
   @override
   Widget build(BuildContext context) {
     final provMdl = Provider.of<LeaveReqProvider>(context);
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Consumer<LeaveReqProvider>(
-          builder: (context,data,_) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              // padding: EdgeInsets.all(10.0),
-              children: [
-                provMdl.leavesModel.leaves != null && provMdl.leavesModel.leaves!.length != 0
-                ? Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 15.0,),
-                      role != 'hr' ? Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text('From'),
-                          Text('To'),
-                          Text('Status'),
-                        ],
-                      ): Container(),
-                      role != 'hr' ? SizedBox(height: 15.0,) : Container(),
-                      Expanded(
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: provMdl.leavesModel.leaves!.length,
-                          //padding: EdgeInsets.all(8.0),
-                          itemBuilder: (context,index){
-                            var fromDateTime = DateTime.parse(provMdl.leavesModel.leaves![index].fromDate.toString());
-                            var fromDateParse = DateFormat("yyyy-MM-dd HH:mm").parse(fromDateTime.toString(), true);
-                            print(fromDateParse);
-                            String fromDate = DateFormat("dd-MMM").format(fromDateParse.toLocal()).toString();
-                            var toDateTime = DateTime.parse(provMdl.leavesModel.leaves![index].toDate.toString());
-                            var toDateParse = DateFormat("yyyy-MM-dd HH:mm").parse(toDateTime.toString(), true);
-                            print(fromDateParse);
-                            String toDate = DateFormat("dd-MMM").format(toDateParse.toLocal()).toString();
-                            String? status;
-                            String? subSvg;
-                            String? img;
-                            if(provMdl.leavesModel.leaves![index].user != null){
-                              if(provMdl.leavesModel.leaves![index].user!.dp.toString() != null){
-                                subSvg =provMdl.leavesModel.leaves![index].user!.dp.toString();
-                                img = subSvg.split('.').last;
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Consumer<LeaveReqProvider>(
+            builder: (context,data,_) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                // padding: EdgeInsets.all(10.0),
+                children: [
+                  provMdl.leavesModel.leaves != null && provMdl.leavesModel.leaves!.length != 0
+                      ? Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 15.0,),
+                        role != 'hr' ? Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('From'),
+                            Text('To'),
+                            Text('Action'),
+                          ],
+                        ): Container(),
+                        role != 'hr' ? SizedBox(height: 15.0,) : Container(),
+                        Expanded(
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: provMdl.leavesModel.leaves!.length,
+                            //padding: EdgeInsets.all(8.0),
+                            itemBuilder: (context,index){
+                              var fromDateTime = DateTime.parse(provMdl.leavesModel.leaves![index].fromDate.toString());
+                              var fromDateParse = DateFormat("yyyy-MM-dd HH:mm").parse(fromDateTime.toString(), true);
+                              print(fromDateParse);
+                              String fromDate = DateFormat("dd-MM-yyyy").format(fromDateParse.toLocal()).toString();
+                              var toDateTime = DateTime.parse(provMdl.leavesModel.leaves![index].toDate.toString());
+                              var toDateParse = DateFormat("yyyy-MM-dd HH:mm").parse(toDateTime.toString(), true);
+                              print(fromDateParse);
+                              String toDate = DateFormat("dd-MM-yyyy").format(toDateParse.toLocal()).toString();
+                              String? status;
+                              String? subSvg;
+                              String? img;
+                              if(provMdl.leavesModel.leaves![index].user != null){
+                                if(provMdl.leavesModel.leaves![index].user!.dp.toString() != null){
+                                  subSvg =provMdl.leavesModel.leaves![index].user!.dp.toString();
+                                  img = subSvg.split('.').last;
+                                }
                               }
-                            }
-                            provMdl.leavesModel.leaves!.forEach((element) {
-                              element.leavesStatus!.forEach((elementStatus) {
-                                if(elementStatus.granted == true){
-                                  status = 'Approved';
-                                }
-                                else if(elementStatus.rejected == true){
-                                  status = 'Rejected';
-                                }
-                                else{
-                                  status = 'Pending';
-                                }
+                              provMdl.leavesModel.leaves!.forEach((element) {
+                                element.leavesStatus!.forEach((elementStatus) {
+                                  if(elementStatus.granted == true){
+                                    status = 'Approved';
+                                  }
+                                  else if(elementStatus.rejected == true){
+                                    status = 'Rejected';
+                                  }
+                                  else{
+                                    status = 'Pending';
+                                  }
+                                });
                               });
-                            });
-                            List<LeavesStatus> leavesStatus = provMdl.leavesModel.leaves![index].leavesStatus!;
-                            return  role != 'hr'
-                            ? userId ==  provMdl.leavesModel.leaves![index].user!.sId
-                             ?  Column(
-                               children: [
-                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Container(
-                                        width: 100.0,
-                                        child: Text(fromDate.toString(),style: TextStyle(
-                                          letterSpacing: 1.0
-                                        ),)),
-                                    Container(
-                                        width: 90.0,
-                                        child: Text(toDate.toString(),style: TextStyle(
-                                            letterSpacing: 1.0
-                                        ))),
-
-                                    Container(
-                                      width: 60.0,
-                                      child: provMdl.leavesModel.leaves![index].leavesStatus!.first.rejected == true ? Text('Rejected',style: TextStyle(color: Colors.red),)
-                                          : provMdl.leavesModel.leaves![index].leavesStatus!.first.granted == true ? Text('Approved',style: TextStyle(color: Colors.green)) : Text('Pending'),
-                                    )
-                                    /*Text(provMdl.leavesModel.leaves![index].leavesStatus!.first.rejected.toString(),style: TextStyle(
-                                        letterSpacing: 0.5,
-                                        color: status == "Pending" ? Colors.orange.shade800 : status == "Approved" ? Colors.green : Colors.red
-                                    ),)*/
-                                  ],
-                            ),
-                                 SizedBox(height: 10.0,)
-                               ],
-                             )
-                            : Container()
-                            : Container(
-                              padding: EdgeInsets.all(10.0),
-                              margin: EdgeInsets.only(top: 10.0,bottom: 10.0),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                                border: Border.all(
-                                  color: Colors.grey,
-                                ),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                              return role != 'hr'
+                                  ? Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  InkWell(
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      children: [
-                                        subSvg == null ?
-                                        Container()
-                                            : img!.contains('svg')
-                                            ? SvgPicture.network(
-                                          provMdl.leavesModel.leaves![index].user!.dp.toString(),
-                                          fit: BoxFit.contain,
-                                          height: 40.0,
-                                        ) : CachedNetworkImage(imageUrl: subSvg,height: 45.0,),
-                                        SizedBox(width: 10.0,),
-                                        Text( provMdl.leavesModel.leaves![index].user!.name.toString())
-                                      ],
-                                    ),
-                                    onTap:(){
-                                      onTaps(provMdl.leavesModel.leaves![index]);
-                                    },
+                                  Text(fromDate.toString()),
+                                  Text(toDate.toString()),
+                                  Text(status.toString(),style: TextStyle(
+                                      letterSpacing: 0.5,
+                                      color: status == "Pending" ? Colors.orange.shade800 : status == "Approved" ? Colors.green : Colors.red
+                                  ),)
+                                ],
+                              )
+                                  : Container(
+                                padding: EdgeInsets.all(10.0),
+                                margin: EdgeInsets.only(top: 10.0,bottom: 10.0),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                                  border: Border.all(
+                                    color: Colors.grey,
                                   ),
-                                  SizedBox(height: 10.0,),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text('From'),
-                                      Text('To'),
-                                      Text('Action'),
-                                    ],
-                                  ),
-                                  SizedBox(height: 10.0,),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(fromDate.toString()),
-                                      Text(toDate.toString()),
-                                      leavesStatus.first.granted == true
-                                      ? Text('Approved')
-                                      :  leavesStatus.first.rejected == true
-                                      ? Text('Rejected')
-                                      : Row(
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    InkWell(
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.start,
                                         children: [
-                                          InkWell(
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                  shape: BoxShape.circle
-                                              ),
-                                              child: Icon(Icons.cancel),
-                                            ),
-                                            onTap: (){
-                                              print('reject');
-                                            },
-                                          ),
+                                          subSvg == null ?
+                                          Container()
+                                              : img!.contains('svg')
+                                              ? SvgPicture.network(
+                                            provMdl.leavesModel.leaves![index].user!.dp.toString(),
+                                            fit: BoxFit.contain,
+                                            height: 40.0,
+                                          ) : CachedNetworkImage(imageUrl: subSvg,height: 45.0,),
                                           SizedBox(width: 10.0,),
-                                          InkWell(
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                  shape: BoxShape.circle
-                                              ),
-                                              child: Icon(Icons.task_alt),
-                                            ),
-                                            onTap: (){
-                                              print('grant');
-                                            },
-                                          )
+                                          Text( provMdl.leavesModel.leaves![index].user!.name.toString())
                                         ],
                                       ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
+                                      onTap:(){
+                                      /*  List<LeavesStatus> leavesStatus = provMdl.leavesModel.leaves![index].leavesStatus!;
+                                        onTaps(provMdl.leavesModel.leaves![index]);*/
+                                        onTaps(provMdl.leavesModel.leaves![index]);
+                                      },
+                                    ),
+                                    SizedBox(height: 10.0,),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text('From'),
+                                        Text('To'),
+                                        Text('Action'),
+                                      ],
+                                    ),
+                                    SizedBox(height: 10.0,),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(fromDate.toString()),
+                                        Text(toDate.toString()),
+                                        Row(
+                                          children: [
+                                            InkWell(
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                    shape: BoxShape.circle
+                                                ),
+                                                child: Icon(Icons.cancel),
+                                              ),
+                                              onTap: (){
+                                                print('reject');
+                                              },
+                                            ),
+                                            SizedBox(width: 10.0,),
+                                            InkWell(
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                    shape: BoxShape.circle
+                                                ),
+                                                child: Icon(Icons.task_alt),
+                                              ),
+                                              onTap: (){
+                                                print('grant');
+                                              },
+                                            )
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                )
-                    : Expanded(child: Center(child: Text('No Leavses')))
-              ],
-            );
-          }
+                      ],
+                    ),
+                  )
+                      : Expanded(child: Center(child: Text('No Leavses')))
+                ],
+              );
+            }
+        ),
       ),
     );
   }
@@ -307,7 +279,7 @@ class _LeavesActionState extends State<LeavesAction> {
                                             ? Text('Approved')
                                             :  leavesStatus[index].rejected == true
                                             ? Text('Rejected')
-                                         :  Row(
+                                            :  Row(
                                           children: [
                                             InkWell(
                                               child: Container(

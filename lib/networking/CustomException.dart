@@ -49,6 +49,26 @@ class ApiBaseHelper {
     return responseJson;
   }
 
+  Future<dynamic> put(String url) async {
+    var token =  await sharedPref().getSharedPref('token');
+    var headers =  {
+      'Content-type' : 'application/json',
+      'authorization': 'Bearer $token',
+    };
+    print('Api Put, url $url');
+    var responseJson;
+    try {
+      final response = await http.put(Uri.parse(url),headers: headers);
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      print('No net');
+      throw FetchDataException('No Internet connection');
+    }
+    print('api put.');
+    print(responseJson.toString());
+    return responseJson;
+  }
+
 /*  Future<dynamic> put(String url, dynamic body) async {
     print('Api Put, url $url');
     var responseJson;

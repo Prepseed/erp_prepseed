@@ -9,8 +9,8 @@ import 'package:provider/provider.dart';
 import 'leave_list.dart';
 import 'leave_req_provider.dart';
 
-class LeaveAndReportPage extends StatelessWidget {
-  const LeaveAndReportPage({Key? key}) : super(key: key);
+class AddNewLeaveReq extends StatelessWidget {
+  const AddNewLeaveReq({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -605,9 +605,9 @@ class _LeaveAndReportState extends State<LeaveAndReport> {
           actions: [
             ElevatedButton(
                 onPressed: (){
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (context) => const LeaveLists()));
-                  Navigator.pop(context);
+                  Navigator.pop(ctx);
+                  Navigator.of(ctx).push(MaterialPageRoute(
+                      builder: (context) =>  LeaveLists()));
                 },
                 child: Text('Ok')
             )
