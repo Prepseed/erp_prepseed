@@ -59,89 +59,98 @@ class _LeaveListsState extends State<LeaveLists> {
                 Navigator.of(context).pop();
               },
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                InkWell(
-                    child: Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      color: Colors.green.shade400,
-                      shadowColor: Colors.blue.shade400,
-                      elevation: 5,
-                      child: Container(
-                        padding: EdgeInsets.all(10.0),
-                        height: 100.0,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text('Casual Leaves'),
-                            SizedBox(height: 10.0,),
-                            Text('4/9')
-                          ],
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: InkWell(
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          color: Colors.green.shade400,
+                          shadowColor: Colors.blue.shade400,
+                          elevation: 5,
+                          child: Container(
+                            padding: EdgeInsets.all(10.0),
+                            height: 100.0,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text('Casual Leaves',textAlign: TextAlign.center),
+                                SizedBox(height: 10.0,),
+                                Text('4/9')
+                              ],
+                            ),
+                          ),
                         ),
-                      ),
+                        onTap: (){
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => LeaveLists())
+                          );
+                        }
                     ),
-                    onTap: (){
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => LeaveLists())
-                      );
-                    }
-                ),
-                InkWell(
-                    child: Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      elevation: 5,
-                      color: Colors.yellow.shade400,
-                      child: Container(
-                        padding: EdgeInsets.all(10.0),
-                        height: 100.0,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text('Medical Leaves'),
-                            SizedBox(height: 10.0,),
-                            Text('4/9')
-                          ],
+                  ),
+                  Expanded(
+                    child: InkWell(
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          elevation: 5,
+                          color: Colors.yellow.shade400,
+                          child: Container(
+                            padding: EdgeInsets.all(10.0),
+                            height: 100.0,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text('Medical Leaves',textAlign: TextAlign.center),
+                                SizedBox(height: 10.0,),
+                                Text('4/9')
+                              ],
+                            ),
+                          ),
                         ),
-                      ),
+                        onTap: (){
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => LeaveLists())
+                          );
+                        }
                     ),
-                    onTap: (){
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => LeaveLists())
-                      );
-                    }
-                ),
-                InkWell(
-                    child: Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      elevation: 5,
-                      color: Colors.red.shade400,
-                      child: Container(
-                        padding: EdgeInsets.all(10.0),
-                        height: 100.0,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text('Unpaid Leaves'),
-                            SizedBox(height: 10.0,),
-                            Text('4/9')
-                          ],
+                  ),
+                  Expanded(
+                    child: InkWell(
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          elevation: 5,
+                          color: Colors.red.shade400,
+                          child: Container(
+                            padding: EdgeInsets.all(10.0),
+                            height: 100.0,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text('Unpaid Leaves',textAlign: TextAlign.center),
+                                SizedBox(height: 10.0,),
+                                Text('4/9')
+                              ],
+                            ),
+                          ),
                         ),
-                      ),
+                        onTap: (){
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => LeaveLists())
+                          );
+                        }
                     ),
-                    onTap: (){
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => LeaveLists())
-                      );
-                    }
-                ),
-              ],
+                  ),
+                ],
+              ),
             ),
             SizedBox(height: 20.0,),
             Expanded(
