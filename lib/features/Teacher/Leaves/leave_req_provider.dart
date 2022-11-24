@@ -13,18 +13,20 @@ class LeaveReqProvider extends ChangeNotifier{
   ApiBaseHelper _helper = ApiBaseHelper();
   String? userId;
   LeavesModel leavesModel = LeavesModel();
+  LeavesModel leavesModelRequest = LeavesModel();
   getLeaves(bool hr) async{
     userId = await sharedPref().getSharedPref('userId');
     String url = hr ? "https://napi.prepseed.com/leaves/request" : "https://napi.prepseed.com/leaves/request?id=$userId";
     final response = await _helper.get(url);
-    leavesModel = LeavesModel.fromJson(response);
-    print(leavesModel);
+    leavesModelRequest = LeavesModel.fromJson(response);
+    print(leavesModelRequest);
+    leaves();
     notifyListeners();
   }
 
   leaves() async{
     userId = await sharedPref().getSharedPref('userId');
-    String url = "https://napi.prepseed.com/leaves?startDate=11/21/2022&endDate=12/31/2022";
+    String url = "https://napi.prepseed.com/leaves?format=user&startDate=11/21/2022&endDate=12/31/2022";
     final response = await _helper.get(url);
     leavesModel = LeavesModel.fromJson(response);
     print(leavesModel);

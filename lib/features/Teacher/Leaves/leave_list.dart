@@ -25,16 +25,22 @@ class LeaveLists extends StatefulWidget {
 class _LeaveListsState extends State<LeaveLists> {
 
   var role;
+  String? userId;
 @override
   void initState() {
   SharedPreferences pref;
   Future.microtask(() async => {
    pref = await SharedPreferences.getInstance(),
     role = pref.getString('Role'),
-    await Provider.of<LeaveReqProvider>(context,listen: false).getLeaves(role == 'hr' ? true : false)
+    userId = pref.getString('userId'),
+    await Provider.of<LeaveReqProvider>(context,listen: false).getLeaves(role == 'hr' ? true : false),
+
   });
     super.initState();
   }
+  List casualList = [];
+  List unPaidList = [];
+  List medicalList = [];
   @override
   Widget build(BuildContext context) {
     
@@ -59,100 +65,109 @@ class _LeaveListsState extends State<LeaveLists> {
                 Navigator.of(context).pop();
               },
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: InkWell(
-                        child: Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          color: Colors.green.shade400,
-                          shadowColor: Colors.blue.shade400,
-                          elevation: 5,
-                          child: Container(
-                            padding: EdgeInsets.all(10.0),
-                            height: 100.0,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text('Casual Leaves',textAlign: TextAlign.center),
-                                SizedBox(height: 10.0,),
-                                Text('4/9')
-                              ],
+            role != 'hr' ? Consumer<LeaveReqProvider>(
+              builder: (context,data,_) {
+                if(provMdl.leavesModel.leaves != null ){
+                  casualList = [];
+                  unPaidList = [];
+                  medicalList = [];
+                provMdl.leavesModel.leaves!.forEach((element) {
+                  if(element.user!.sId == userId){
+                  element.leavesStatus!.forEach((elementLeave) {
+                    if(elementLeave.type == "Casual" && elementLeave.granted == true){
+                      casualList.add(elementLeave);
+                    }
+                    else if(elementLeave.type == "Unpaid" && elementLeave.granted == true){
+                      unPaidList.add(elementLeave);
+                    }
+                    else if(elementLeave.type == "Medical" && elementLeave.granted == true){
+                      medicalList.add(elementLeave);
+                    }
+                  });}
+                });}
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: InkWell(
+                            child: Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              color: Colors.green.shade400,
+                              shadowColor: Colors.blue.shade400,
+                              elevation: 5,
+                              child: Container(
+                                padding: EdgeInsets.all(10.0),
+                                height: 100.0,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text('Casual Leaves',textAlign: TextAlign.center),
+                                    SizedBox(height: 10.0,),
+                                    Text(casualList.length.toString())
+                                  ],
+                                ),
+                              ),
                             ),
-                          ),
+
                         ),
-                        onTap: (){
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => LeaveLists())
-                          );
-                        }
-                    ),
-                  ),
-                  Expanded(
-                    child: InkWell(
-                        child: Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          elevation: 5,
-                          color: Colors.yellow.shade400,
-                          child: Container(
-                            padding: EdgeInsets.all(10.0),
-                            height: 100.0,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text('Medical Leaves',textAlign: TextAlign.center),
-                                SizedBox(height: 10.0,),
-                                Text('4/9')
-                              ],
+                      ),
+                      Expanded(
+                        child: InkWell(
+                            child: Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              elevation: 5,
+                              color: Colors.yellow.shade400,
+                              child: Container(
+                                padding: EdgeInsets.all(10.0),
+                                height: 100.0,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text('Medical Leaves',textAlign: TextAlign.center),
+                                    SizedBox(height: 10.0,),
+                                    Text(medicalList.length.toString())
+                                  ],
+                                ),
+                              ),
                             ),
-                          ),
                         ),
-                        onTap: (){
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => LeaveLists())
-                          );
-                        }
-                    ),
-                  ),
-                  Expanded(
-                    child: InkWell(
-                        child: Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          elevation: 5,
-                          color: Colors.red.shade400,
-                          child: Container(
-                            padding: EdgeInsets.all(10.0),
-                            height: 100.0,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text('Unpaid Leaves',textAlign: TextAlign.center),
-                                SizedBox(height: 10.0,),
-                                Text('4/9')
-                              ],
+                      ),
+                      Expanded(
+                        child: InkWell(
+                            child: Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              elevation: 5,
+                              color: Colors.red.shade400,
+                              child: Container(
+                                padding: EdgeInsets.all(10.0),
+                                height: 100.0,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text('Unpaid Leaves',textAlign: TextAlign.center),
+                                    SizedBox(height: 10.0,),
+                                    Text(unPaidList.length.toString())
+                                  ],
+                                ),
+                              ),
                             ),
-                          ),
                         ),
-                        onTap: (){
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => LeaveLists())
-                          );
-                        }
-                    ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ),
-            SizedBox(height: 20.0,),
+                );
+              }
+            )
+            : Container(),
+            role != 'hr' ? SizedBox(height: 20.0,) : Container(),
             Expanded(
               child:  DefaultTabController(
                 length: 2,
@@ -344,7 +359,7 @@ class _LeaveListsState extends State<LeaveLists> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
         onPressed: (){
-          Navigator.of(context).push(MaterialPageRoute(
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
               builder: (context) => AddNewLeaveReq()));
         },
         child: Icon(Icons.add),

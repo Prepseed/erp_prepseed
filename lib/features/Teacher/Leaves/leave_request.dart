@@ -39,7 +39,7 @@ class _LeaveRequestState extends State<LeaveRequest> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 // padding: EdgeInsets.all(10.0),
                 children: [
-                  provMdl.leavesModel.leaves != null && provMdl.leavesModel.leaves!.length != 0
+                  provMdl.leavesModelRequest.leaves != null && provMdl.leavesModelRequest.leaves!.length != 0
                       ? Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -57,27 +57,27 @@ class _LeaveRequestState extends State<LeaveRequest> {
                         Expanded(
                           child: ListView.builder(
                             shrinkWrap: true,
-                            itemCount: provMdl.leavesModel.leaves!.length,
+                            itemCount: provMdl.leavesModelRequest.leaves!.length,
                             //padding: EdgeInsets.all(8.0),
                             itemBuilder: (context,index){
-                              var fromDateTime = DateTime.parse(provMdl.leavesModel.leaves![index].fromDate.toString());
+                              var fromDateTime = DateTime.parse(provMdl.leavesModelRequest.leaves![index].fromDate.toString());
                               var fromDateParse = DateFormat("yyyy-MM-dd HH:mm").parse(fromDateTime.toString(), true);
                               print(fromDateParse);
                               String fromDate = DateFormat("dd-MM-yyyy").format(fromDateParse.toLocal()).toString();
-                              var toDateTime = DateTime.parse(provMdl.leavesModel.leaves![index].toDate.toString());
+                              var toDateTime = DateTime.parse(provMdl.leavesModelRequest.leaves![index].toDate.toString());
                               var toDateParse = DateFormat("yyyy-MM-dd HH:mm").parse(toDateTime.toString(), true);
                               print(fromDateParse);
                               String toDate = DateFormat("dd-MM-yyyy").format(toDateParse.toLocal()).toString();
                               String? status;
                               String? subSvg;
                               String? img;
-                              if(provMdl.leavesModel.leaves![index].user != null){
-                                if(provMdl.leavesModel.leaves![index].user!.dp.toString() != null){
-                                  subSvg =provMdl.leavesModel.leaves![index].user!.dp.toString();
+                              if(provMdl.leavesModelRequest.leaves![index].user != null){
+                                if(provMdl.leavesModelRequest.leaves![index].user!.dp.toString() != null){
+                                  subSvg =provMdl.leavesModelRequest.leaves![index].user!.dp.toString();
                                   img = subSvg.split('.').last;
                                 }
                               }
-                              provMdl.leavesModel.leaves!.forEach((element) {
+                              provMdl.leavesModelRequest.leaves!.forEach((element) {
                                 element.leavesStatus!.forEach((elementStatus) {
                                   if(elementStatus.granted == true){
                                     status = 'Approved';
@@ -91,7 +91,7 @@ class _LeaveRequestState extends State<LeaveRequest> {
                                 });
                               });
                               return role != 'hr'
-                                  ? Row(
+                              ? Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(fromDate.toString()),
@@ -102,7 +102,7 @@ class _LeaveRequestState extends State<LeaveRequest> {
                                   ),)
                                 ],
                               )
-                                  : Container(
+                              : Container(
                                 padding: EdgeInsets.all(10.0),
                                 margin: EdgeInsets.only(top: 10.0,bottom: 10.0),
                                 decoration: BoxDecoration(
@@ -122,18 +122,18 @@ class _LeaveRequestState extends State<LeaveRequest> {
                                           Container()
                                               : img!.contains('svg')
                                               ? SvgPicture.network(
-                                            provMdl.leavesModel.leaves![index].user!.dp.toString(),
+                                            provMdl.leavesModelRequest.leaves![index].user!.dp.toString(),
                                             fit: BoxFit.contain,
                                             height: 40.0,
                                           ) : CachedNetworkImage(imageUrl: subSvg,height: 45.0,),
                                           SizedBox(width: 10.0,),
-                                          Text( provMdl.leavesModel.leaves![index].user!.name.toString())
+                                          Text( provMdl.leavesModelRequest.leaves![index].user!.name.toString())
                                         ],
                                       ),
                                       onTap:(){
                                       /*  List<LeavesStatus> leavesStatus = provMdl.leavesModel.leaves![index].leavesStatus!;
                                         onTaps(provMdl.leavesModel.leaves![index]);*/
-                                        onTaps(provMdl.leavesModel.leaves![index]);
+                                        onTaps(provMdl.leavesModelRequest.leaves![index]);
                                       },
                                     ),
                                     SizedBox(height: 10.0,),

@@ -57,7 +57,7 @@ class _DashboardState extends State<Dashboard> {
                               children: [
                                 Image.asset("assets/images/Seelect Date Icon.png"),
                                 SizedBox(height: 10.0,),
-                                Text(widget.items[index]['name'].toString(),textAlign: TextAlign.justify,),
+                                Text(widget.items[index]['name'].toString(),textAlign: TextAlign.center,),
                               ],
                             ),
                           ),

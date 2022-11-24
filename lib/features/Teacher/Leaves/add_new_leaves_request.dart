@@ -404,6 +404,7 @@ class _LeaveAndReportState extends State<LeaveAndReport> {
                         isMultipleDay ?  Container() : const Divider(indent: 20,),
                         days.length >= 1
                         ? ListView.builder(
+                          padding: EdgeInsets.all(10.0),
                           physics: const BouncingScrollPhysics(),
                           shrinkWrap: true,
                             itemCount: days.length,
@@ -455,24 +456,28 @@ class _LeaveAndReportState extends State<LeaveAndReport> {
                                     child: Row(
                                       children: [
                                         Text("Half Day",style: textStyle,),
-                                        Switch(value: leavesReq[index]["fullDay"],
-                                            onChanged: (bool value){
-                                                if(leavesReq[index]["fullDay"] == false)
-                                                {
-                                                  setState(() {
-                                                    leavesReq[index]["fullDay"] = true;
-                                                  });
-                                                  print('half Day');
+                                        SizedBox(width: 10.0,),
+                                        Expanded(
+                                          child: Switch(value: leavesReq[index]["fullDay"],
+                                              onChanged: (bool value){
+                                                  if(leavesReq[index]["fullDay"] == false)
+                                                  {
+                                                    setState(() {
+                                                      leavesReq[index]["fullDay"] = true;
+                                                    });
+                                                    print('half Day');
+                                                  }
+                                                  else
+                                                  {
+                                                    setState(() {
+                                                      leavesReq[index]["fullDay"] = false;
+                                                    });
+                                                    print('full Day');
+                                                  }
                                                 }
-                                                else
-                                                {
-                                                  setState(() {
-                                                    leavesReq[index]["fullDay"] = false;
-                                                  });
-                                                  print('full Day');
-                                                }
-                                              }
+                                          ),
                                         ),
+                                        SizedBox(width: 10.0,),
                                         Text("Full Day",style: textStyle,),
                                       ],
                                     ),
@@ -554,7 +559,7 @@ class _LeaveAndReportState extends State<LeaveAndReport> {
                    /* leavesReq.forEach((element) {
                       list.add(element.values.toList());
                     });*/
-                    await Provider.of<LeaveReqProvider>(context,listen: false).leaveReq(json.encode(data));
+                 //   await Provider.of<LeaveReqProvider>(context,listen: false).leaveReq(json.encode(data));
                     String msg = Provider.of<LeaveReqProvider>(context,listen: false).msg.toString();
                     msg.isNotEmpty ? onTap(msg) : null;
                     if(days.length >= 1){
@@ -606,7 +611,7 @@ class _LeaveAndReportState extends State<LeaveAndReport> {
             ElevatedButton(
                 onPressed: (){
                   Navigator.pop(ctx);
-                  Navigator.of(ctx).push(MaterialPageRoute(
+                  Navigator.of(ctx).pushReplacement(MaterialPageRoute(
                       builder: (context) =>  LeaveLists()));
                 },
                 child: Text('Ok')

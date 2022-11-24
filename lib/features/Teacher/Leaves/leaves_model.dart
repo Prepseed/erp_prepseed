@@ -43,6 +43,12 @@ class Leaves {
         leavesStatus!.add(LeavesStatus.fromJson(v));
       });
     }
+    if (json['leaves'] != null) {
+      leavesStatus = <LeavesStatus>[];
+      json['leaves'].forEach((v) {
+        leavesStatus!.add(LeavesStatus.fromJson(v));
+      });
+    }
     user = json['user'] != null ? User.fromJson(json['user']) : null;
   }
 
