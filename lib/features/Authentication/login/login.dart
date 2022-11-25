@@ -107,7 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           labelStyle: TextStyle(
                               fontFamily: 'Montserrat',
                               fontWeight: FontWeight.bold,
-                              color: Colors.grey),
+                              color: Colors.black87),
                           focusedBorder: UnderlineInputBorder(
                               borderSide: BorderSide(color: Colors.green))),
                     ),
@@ -125,7 +125,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           labelStyle: TextStyle(
                               fontFamily: 'Montserrat',
                               fontWeight: FontWeight.bold,
-                              color: Colors.grey),
+                              color: Colors.black87),
                           suffixIcon: IconButton(
                             icon: Icon(
                               _passwordVisible
