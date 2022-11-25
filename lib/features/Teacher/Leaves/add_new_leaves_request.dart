@@ -55,6 +55,7 @@ class _LeaveAndReportState extends State<AddNewLeaveReq> {
   bool fromEmpty = false;
   bool toEmpty = false;
   bool sameDate = false;
+  bool types = false;
 
 
   @override
@@ -186,6 +187,9 @@ class _LeaveAndReportState extends State<AddNewLeaveReq> {
                                                       fromEmpty = false;
                                                     });
                                                   }else{
+                                                    setState(() {
+                                                      fromEmpty = false;
+                                                    });
                                                   }
                                                 },
                                               ),
@@ -193,7 +197,7 @@ class _LeaveAndReportState extends State<AddNewLeaveReq> {
                                             fromEmpty == true
                                             ? Container(
                                               margin: const EdgeInsets.only(left: 15.0),
-                                              child: const Text('Select From Date',
+                                              child:  Text(isMultipleDay ? 'Select From Date' : 'Select Date',
                                                 style: TextStyle(
                                                     fontSize: 12.0,
                                                     color: Colors.red
@@ -295,46 +299,60 @@ class _LeaveAndReportState extends State<AddNewLeaveReq> {
                                     Image.asset("assets/images/Type.png"),
                                     // SizedBox(width: 20,),
                                     Expanded(
-                                      child:   Container(
-                                          padding: const EdgeInsets.all(10.0),
-                                          height: 40.0,
-                                          // width: 150.0,
-                                          margin: const EdgeInsets.all(10.0),
-                                          decoration: BoxDecoration(
-                                            color: Colors.transparent,
-                                            borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                                            border: Border.all(color: Colors.black45),
-                                            // boxShadow: [BoxShadow(blurRadius: 10,color: Colors.black45,offset: Offset(3,3))]
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                              padding: const EdgeInsets.all(10.0),
+                                              height: 40.0,
+                                              // width: 150.0,
+                                              margin: const EdgeInsets.all(10.0),
+                                              decoration: BoxDecoration(
+                                                color: Colors.transparent,
+                                                borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                                                border: Border.all(color: Colors.black45),
+                                                // boxShadow: [BoxShadow(blurRadius: 10,color: Colors.black45,offset: Offset(3,3))]
+                                              ),
+                                              child: DropdownButton<String>(
+                                                hint: Text("Select Leave Type",
+                                                    style:textStyle),
+                                                // borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                                                value: dropdownValue,
+                                                isExpanded: true,
+                                                icon: const Icon(Icons.keyboard_arrow_down),
+                                                iconSize: 20.0,
+                                                underline: Container(),
+                                                items: <String>['Casual', 'Medical', 'Unpaid'].map((String value) {
+                                                  return DropdownMenuItem<String>(
+                                                    value: value.toString(),
+                                                    child: Text(value.toString(),
+                                                      style:const TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 15.0
+                                                      ),),
+                                                  );
+                                                }).toList(),
+                                                onChanged: (String? newValue) {
+                                                  setState(() {
+                                                    dropdownValue = newValue.toString();
+                                                    types = false;
+                                                  });
+                                                },
+                                              )
                                           ),
-                                          child: DropdownButton<String>(
-                                            hint: Text("Select Leave Type",
-                                                style:textStyle),
-                                            // borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                                            value: dropdownValue,
-                                            isExpanded: true,
-                                            icon: const Icon(Icons.keyboard_arrow_down),
-                                            iconSize: 20.0,
-                                            underline: Container(),
-                                            items: <String>['Casual', 'Medical', 'Unpaid'].map((String value) {
-                                              return DropdownMenuItem<String>(
-                                                value: value.toString(),
-                                                child: Text(value.toString(),
-                                                  style:const TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 15.0
-                                                  ),),
-                                              );
-                                            }).toList(),
-                                            onChanged: (String? newValue) {
-                                              setState(() {
-                                                dropdownValue = newValue.toString();
-                                              });
-                                            },
-                                          )
+                                          types ? Container(
+                                            margin: const EdgeInsets.only(left: 15.0),
+                                            child: Text('Select Leave Types', style: TextStyle(
+                                                fontSize: 12.0,
+                                                color: Colors.red
+                                            ),  textAlign: TextAlign.start,),
+                                          ) : Container(),
+                                        ],
                                       ),
                                     ),
                                   ],
                                 ),
+
                                 isMultipleDay ?  Container() : const Divider(indent: 20,),
                                 sameDate == false ? days.length >= 1
                                  ? ListView.builder(
@@ -467,6 +485,16 @@ class _LeaveAndReportState extends State<AddNewLeaveReq> {
                                 ),
                                 primary: const Color(0xff437BF1)),
                             onPressed: () async {
+                              if(days.length >= 1){
+                                // onTap("SuccessDully Added");
+                              }
+                              else{
+                                setState(() {
+                                  fromEmpty = true;
+                                  toEmpty = true;
+                                  types = true;
+                                });
+                              }
                               Map data = isMultipleDay ? {
                                 "fromDate": DateFormat('MM-dd-yyyy').format(fromDate!),
                                 "toDate": DateFormat('MM-dd-yyyy').format(toDate!),
@@ -490,15 +518,7 @@ class _LeaveAndReportState extends State<AddNewLeaveReq> {
                               String? msg;
                               msg =  Provider.of<LeaveReqProvider>(context,listen: false).msg.toString();
                               msg.isNotEmpty ? onTaps(msg) : null;
-                              if(days.length >= 1){
-                                // onTap("SuccessDully Added");
-                              }
-                              else{
-                                setState(() {
-                                  fromEmpty = true;
-                                  toEmpty = true;
-                                });
-                              }
+
                               fromController.clear();
                               toController.clear();
                               reasonController.clear();
