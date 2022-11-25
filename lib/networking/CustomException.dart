@@ -22,7 +22,7 @@ class ApiBaseHelper {
       print('No net');
       throw FetchDataException('No Internet connection');
     }
-    print('api get recieved!');
+    print('api get received!');
     return responseJson;
   }
 
@@ -103,7 +103,6 @@ dynamic _returnResponse(http.Response response) {
   switch (response.statusCode) {
     case 200:
       var responseJson = json.decode(response.body.toString());
-      print(responseJson);
       return responseJson;
     case 400:
       throw BadRequestException(response.body.toString());
@@ -113,6 +112,6 @@ dynamic _returnResponse(http.Response response) {
     case 500:
     default:
       throw FetchDataException(
-          'Error occured while Communication with Server with StatusCode : ${response.statusCode}');
+          'Error occurred while Communication with Server with StatusCode : ${response.statusCode}');
   }
 }

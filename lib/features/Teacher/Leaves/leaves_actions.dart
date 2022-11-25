@@ -40,6 +40,7 @@ class _LeavesActionState extends State<LeavesAction> {
           builder: (context,data,_) {
             return provMdl.leavesModel.leaves != null && provMdl.leavesModel.leaves!.isNotEmpty
             ?  ListView.builder(
+              physics: const BouncingScrollPhysics(),
               padding: const EdgeInsets.only(top: 10.0),
               shrinkWrap: true,
               itemCount: provMdl.leavesModel.leaves!.length,
@@ -49,7 +50,7 @@ class _LeavesActionState extends State<LeavesAction> {
                     : hrWidget(provMdl.leavesModel.leaves![index]);
               },
             )
-            : Center(child: Text('No Leaves'));
+            : const Center(child: Text('No Leaves'));
           }
       ),
     );
@@ -337,13 +338,16 @@ class _LeavesActionState extends State<LeavesAction> {
                     },
                   ),
                   const SizedBox(height: 10.0,),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children:const [
-                       Text('Date'),
-                       Text('Type'),
-                       Text('Status'),
-                    ],
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children:const [
+                         Text('Date'),
+                         Text('Type'),
+                         Text('Status'),
+                      ],
+                    ),
                   ),
                   const SizedBox(height: 10.0,),
                   listView(leaves.leavesStatus!)
@@ -356,22 +360,26 @@ class _LeavesActionState extends State<LeavesAction> {
     List<LeavesStatus> list = leaves.leavesStatus!;
       return userId == leaves.user!.sId
       ? ListView(
-        padding: EdgeInsets.all(10.0),
+        physics: NeverScrollableScrollPhysics(),
+        padding: const EdgeInsets.all(10.0),
         shrinkWrap: true,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
-              Text('Date',style: TextStyle(
-                fontWeight: FontWeight.bold
-              ),),
-              Text('Type',style: TextStyle(
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: const [
+                Text('Date',style: TextStyle(
                   fontWeight: FontWeight.bold
-              )),
-              Text('Status',style: TextStyle(
-                  fontWeight: FontWeight.bold
-              )),
-            ],
+                ),),
+                Text('Type',style: TextStyle(
+                    fontWeight: FontWeight.bold
+                )),
+                Text('Status',style: TextStyle(
+                    fontWeight: FontWeight.bold
+                )),
+              ],
+            ),
           ),
           const SizedBox(height: 15.0,),
           Expanded(
@@ -382,61 +390,41 @@ class _LeavesActionState extends State<LeavesAction> {
   }
   
   listView(List<LeavesStatus> list){
-    List<LeavesStatus>? _filteredList;
-    List listfor = [];
-
 
     return ListView.builder(
-      physics: const NeverScrollableScrollPhysics(),
+      physics: BouncingScrollPhysics(),
       shrinkWrap: true,
       itemCount: list.length,
       itemBuilder: (context,ind){
         String fromDate = Functions().dateFormatter(list[ind].date.toString());
-        List filterList1(List list1, {bool removeAllOccurrences = false}) {
-          _filteredList = [];
-          final List uniquePlaces = [];
-          for (dynamic map in list1) {
-            if (!uniquePlaces.contains(map.sId)) {
-              // If it is the first time to see this place
-                uniquePlaces.add(map.sId);
-                _filteredList!.add(map);
-
-            } else {
-              uniquePlaces.removeWhere((m) => m == map.sId);
-              _filteredList!.removeWhere((m) => m.sId ==  map.sId);
-              uniquePlaces.add(map.sId);
-              _filteredList!.add(map);
-            }
-          }
-          print(_filteredList);
-          return _filteredList!;
-        }
-        listfor = filterList1(list);
-        return Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children:  [
-                SizedBox(
-                    width: 100.0,
-                    child: Text(fromDate.toString(),style: const TextStyle(
-                        letterSpacing: 1.0
-                    ),)),
-                SizedBox(
-                    width: 90.0,
-                    child: Text(list[ind].type.toString(),style: const TextStyle(
-                        letterSpacing: 1.0
-                    ))),
-                SizedBox(
-                  width: 60.0,
-                  child:list[ind].rejected == true ? const Text('Rejected',style:  TextStyle(color: Colors.red),)
-                      : list[ind].granted == true ? const Text('Approved',style:  TextStyle(color: Colors.green))
-                      : const Text('Pending'),
-                )
-              ],
-            ),
-            const SizedBox(height: 10.0,)
-          ],
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children:  [
+                  SizedBox(
+                      width: 100.0,
+                      child: Text(fromDate.toString(),style: const TextStyle(
+                          letterSpacing: 1.0
+                      ),)),
+                  SizedBox(
+                      width: 90.0,
+                      child: Text(list[ind].type.toString(),style: const TextStyle(
+                          letterSpacing: 1.0
+                      ))),
+                  SizedBox(
+                    width: 70.0,
+                    child:list[ind].rejected == true ? const Text('Rejected',textAlign: TextAlign.center,style:  TextStyle(color: Colors.red),)
+                        : list[ind].granted == true ? const Text('Approved',textAlign: TextAlign.center,style:  TextStyle(color: Colors.green))
+                        : const Text('Pending'),
+                  )
+                ],
+              ),
+              const SizedBox(height: 10.0,)
+            ],
+          ),
         );
       },
     );

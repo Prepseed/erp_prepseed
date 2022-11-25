@@ -1,13 +1,8 @@
 
-import 'package:erp_prepseed/features/Teacher/Leaves/leaves_model.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'dashboard.dart';
 import 'leave_req_provider.dart';
 import 'leave_request.dart';
 import 'leaves_actions.dart';
@@ -24,7 +19,7 @@ class LeaveLists extends StatefulWidget {
 
 class _LeaveListsState extends State<LeaveLists> {
 
-  var role;
+  String? role;
   String? userId;
 @override
   void initState() {
@@ -43,7 +38,6 @@ class _LeaveListsState extends State<LeaveLists> {
   List medicalList = [];
   @override
   Widget build(BuildContext context) {
-    
     final provMdl = Provider.of<LeaveReqProvider>(context);
 
     return Scaffold(
@@ -53,27 +47,27 @@ class _LeaveListsState extends State<LeaveLists> {
           children: [
             InkWell(
               child: Container(
-                margin: EdgeInsets.all(10.0),
-                padding: EdgeInsets.all(10.0),
+                margin: const EdgeInsets.all(10.0),
+                padding: const EdgeInsets.all(10.0),
                 decoration: BoxDecoration(
                     color: Colors.grey.shade300,
-                    borderRadius: BorderRadius.all(Radius.circular(10.0))
+                    borderRadius: const BorderRadius.all(Radius.circular(10.0))
                 ),
-                child: Icon(Icons.arrow_back_ios_new,size: 15.0,color: Colors.black,),
+                child: const Icon(Icons.arrow_back_ios_new,size: 15.0,color: Colors.black,),
               ),
               onTap: (){
                 Navigator.of(context).pop();
               },
             ),
-            role != 'hr' ? Consumer<LeaveReqProvider>(
+            role != null ? role != 'hr' ? Consumer<LeaveReqProvider>(
               builder: (context,data,_) {
                 if(provMdl.leavesModel.leaves != null ){
                   casualList = [];
                   unPaidList = [];
                   medicalList = [];
-                provMdl.leavesModel.leaves!.forEach((element) {
+                for (var element in provMdl.leavesModel.leaves!) {
                   if(element.user!.sId == userId){
-                  element.leavesStatus!.forEach((elementLeave) {
+                  for (var elementLeave in element.leavesStatus!) {
                     if(elementLeave.type == "Casual" && elementLeave.granted == true){
                       casualList.add(elementLeave);
                     }
@@ -83,12 +77,12 @@ class _LeaveListsState extends State<LeaveLists> {
                     else if(elementLeave.type == "Medical" && elementLeave.granted == true){
                       medicalList.add(elementLeave);
                     }
-                  });}
-                });}
+                  }}
+                }}
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                   // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
                         child: InkWell(
@@ -100,19 +94,18 @@ class _LeaveListsState extends State<LeaveLists> {
                               shadowColor: Colors.blue.shade400,
                               elevation: 5,
                               child: Container(
-                                padding: EdgeInsets.all(10.0),
+                                padding: const EdgeInsets.all(10.0),
                                 height: 100.0,
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Text('Casual Leaves',textAlign: TextAlign.center),
-                                    SizedBox(height: 10.0,),
+                                    const Text('Casual Leaves',textAlign: TextAlign.center),
+                                    const SizedBox(height: 10.0,),
                                     Text(casualList.length.toString())
                                   ],
                                 ),
                               ),
                             ),
-
                         ),
                       ),
                       Expanded(
@@ -124,13 +117,13 @@ class _LeaveListsState extends State<LeaveLists> {
                               elevation: 5,
                               color: Colors.yellow.shade400,
                               child: Container(
-                                padding: EdgeInsets.all(10.0),
+                                padding: const EdgeInsets.all(10.0),
                                 height: 100.0,
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Text('Medical Leaves',textAlign: TextAlign.center),
-                                    SizedBox(height: 10.0,),
+                                    const Text('Medical Leaves',textAlign: TextAlign.center),
+                                    const SizedBox(height: 10.0,),
                                     Text(medicalList.length.toString())
                                   ],
                                 ),
@@ -147,13 +140,13 @@ class _LeaveListsState extends State<LeaveLists> {
                               elevation: 5,
                               color: Colors.red.shade400,
                               child: Container(
-                                padding: EdgeInsets.all(10.0),
+                                padding: const EdgeInsets.all(10.0),
                                 height: 100.0,
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Text('Unpaid Leaves',textAlign: TextAlign.center),
-                                    SizedBox(height: 10.0,),
+                                    const Text('Unpaid Leaves',textAlign: TextAlign.center),
+                                    const SizedBox(height: 10.0,),
                                     Text(unPaidList.length.toString())
                                   ],
                                 ),
@@ -166,19 +159,20 @@ class _LeaveListsState extends State<LeaveLists> {
                 );
               }
             )
-            : Container(),
-            role != 'hr' ? SizedBox(height: 20.0,) : Container(),
+            : Container()
+            : Center(child: CircularProgressIndicator(),),
+            role != null ? role != 'hr' ? const SizedBox(height: 20.0,) : Container(): Container(),
             Expanded(
               child:  DefaultTabController(
                 length: 2,
                 child: Column(
                   children: [
                     Container(
-                      margin: EdgeInsets.symmetric(horizontal: 10.0),
+                      margin: const EdgeInsets.symmetric(horizontal: 10.0),
                       width: MediaQuery.of(context).size.width,
                       child: TabBar(
-                        indicator: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                        indicator: const BoxDecoration(
+                          borderRadius:  BorderRadius.all(Radius.circular(10.0)),
                           color: Colors.blue,
                         ),
                         labelColor: Colors.white,
@@ -187,21 +181,16 @@ class _LeaveListsState extends State<LeaveLists> {
                             fontWeight: FontWeight.w500,
                             fontSize: 15
                         ),
-                       /* labelStyle: GoogleFonts.poppins(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 15
-                        ),*/
                         tabs: const [
                           Tab(text: 'Request'),
                           Tab(text: 'Action'),
                         ],
                       ),
                     ),
-                    Expanded(
-                      child:  TabBarView(
+                    const Expanded(
+                      child:   TabBarView(
                         children: [
-                          // allUserTasks(),
-                          LeaveRequest(),
+                           LeaveRequest(),
                           LeavesAction(),
                         ],
                       ),
@@ -209,149 +198,6 @@ class _LeaveListsState extends State<LeaveLists> {
                   ],
                 ),
               )
-             /* : provMdl.leavesModel.leaves != null ?
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  children: [
-                    role != 'hr' ? Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('From'),
-                        Text('To'),
-                        Text('Action'),
-                      ],
-                    ) : Container(),
-                    SizedBox(height: 5.0,),
-                    Expanded(
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: provMdl.leavesModel.leaves!.length,
-                        //padding: EdgeInsets.all(8.0),
-                        itemBuilder: (context,index){
-                          var fromDateTime = DateTime.parse(provMdl.leavesModel.leaves![index].fromDate.toString());
-                          var fromDateParse = DateFormat("yyyy-MM-dd HH:mm").parse(fromDateTime.toString(), true);
-                          print(fromDateParse);
-                          String fromDate = DateFormat("dd-MM-yyyy").format(fromDateParse.toLocal()).toString();
-                          var toDateTime = DateTime.parse(provMdl.leavesModel.leaves![index].toDate.toString());
-                          var toDateParse = DateFormat("yyyy-MM-dd HH:mm").parse(toDateTime.toString(), true);
-                          print(fromDateParse);
-                          String toDate = DateFormat("dd-MM-yyyy").format(toDateParse.toLocal()).toString();
-                          String? status;
-                          provMdl.leavesModel.leaves!.forEach((element) {
-                            element.leavesStatus!.forEach((elementStatus) {
-                              if(elementStatus.granted == true){
-                                status = 'Approved';
-                              }
-                              else if(elementStatus.rejected == true){
-                                status = 'Rejected';
-                              }
-                              else{
-                                status = 'Pending';
-                              }
-                            });
-                          });
-                          String? subSvg;
-                          String? img;
-                          if(provMdl.leavesModel.leaves![index].user != null){
-                            if(provMdl.leavesModel.leaves![index].user!.dp.toString() != null){
-                              subSvg =provMdl.leavesModel.leaves![index].user!.dp.toString();
-                              img = subSvg.split('.').last;
-                            }
-                          }
-                          return  role != 'hr'
-                          ? Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(fromDate.toString()),
-                              Text(toDate.toString()),
-                              Text(status.toString(),style: TextStyle(
-                                  letterSpacing: 0.5,
-                                  color: status == "Pending" ? Colors.orange.shade800 : status == "Approved" ? Colors.green : Colors.red
-                              ),)
-                            ],
-                          )
-                           : Container(
-                            padding: EdgeInsets.all(10.0),
-                            margin: EdgeInsets.only(top: 10.0,bottom: 10.0),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                              border: Border.all(
-                                color: Colors.grey,
-                              ),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    subSvg == null ?
-                                    Container()
-                                        : img!.contains('svg')
-                                        ? SvgPicture.network(
-                                      provMdl.leavesModel.leaves![index].user!.dp.toString(),
-                                      fit: BoxFit.contain,
-                                      height: 40.0,
-                                    ) : CachedNetworkImage(imageUrl: subSvg,height: 45.0,),
-                                    SizedBox(width: 10.0,),
-                                    Text( provMdl.leavesModel.leaves![index].user!.name.toString())
-                                  ],
-                                ),
-                                SizedBox(height: 10.0,),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text('From'),
-                                    Text('To'),
-                                    Text('Action'),
-                                  ],
-                                ),
-                                SizedBox(height: 10.0,),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(fromDate.toString()),
-                                    Text(toDate.toString()),
-                                    Row(
-                                      children: [
-                                        InkWell(
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                                shape: BoxShape.circle
-                                            ),
-                                            child: Icon(Icons.cancel),
-                                          ),
-                                          onTap: (){
-                                            print('reject');
-                                          },
-                                        ),
-                                        SizedBox(width: 10.0,),
-                                        InkWell(
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                                shape: BoxShape.circle
-                                            ),
-                                            child: Icon(Icons.task_alt),
-                                          ),
-                                          onTap: (){
-                                            print('grant');
-                                          },
-                                        )
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ) */
-
             ),
           ],
         ),
@@ -359,15 +205,23 @@ class _LeaveListsState extends State<LeaveLists> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
         onPressed: (){
-          Navigator.of(context).pushReplacement(MaterialPageRoute(
-              builder: (context) => AddNewLeaveReq()));
+          Navigator.push(
+            context,
+            PageRouteBuilder(
+              pageBuilder: (_, __, ___) => const AddNewLeaveReq(),
+              transitionDuration: const Duration(seconds: 1),
+              transitionsBuilder: (_, a, __, c) => FadeTransition(opacity: a, child: c),
+            ),
+          );
+      /*    Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => AddNewLeaveReq()));*/
         },
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
     );
   }
 
-  TextStyle textStyle = TextStyle(
+  TextStyle textStyle = const TextStyle(
     color: Colors.black,
     fontSize: 13.0,
   );

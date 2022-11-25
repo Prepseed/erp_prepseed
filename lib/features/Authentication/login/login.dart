@@ -155,51 +155,51 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),*/
                     ),
                     SizedBox(height: 40.0),
-                    Container(
-                      height: 40.0,
-                      child: Material(
-                        borderRadius: BorderRadius.circular(20.0),
-                        shadowColor: Colors.greenAccent,
-                        color: Colors.green,
-                        elevation: 7.0,
-                        child: GestureDetector(
-                          onTap: () async {
-                            var bodyData = {
-                              "user":
-                              {
-                                "email": _email.text.toString(),
-                                "password": _password.text.toString()
-                              },
-                              "portal":"preparation"
-                            };
-                            if(_email.text.isNotEmpty && _password.text.isNotEmpty){
-                             WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-                              await Provider.of<LoginProvider>(context, listen: false).grantAccess(json.encode(bodyData));
-                              SharedPreferences prefs = await SharedPreferences.getInstance();
-                              var role = prefs.getString('Role');
-                              print(role);
-                              var role1 = await sharedPref().getSharedPref('role');
-                              print(role1);
-                              Navigator.of(context).pushReplacement(MaterialPageRoute(
-                                builder: (context) =>  Dashboard(role == "mentor" ? mentor : role == "hr" ? hr : []),
-                              ));
-                            });
-
-                            }else{
-                              print('Authenticate fails');
-                              FToast().showToast(child: toast,
-                                toastDuration: Duration(seconds: 2),
-                                  positionedToastBuilder: (context, child) {
-                                    return Positioned(
-                                      child: child,
-                                      top: 16.0,
-                                      left: 16.0,
-                                    );
-                                  }
-                            );
-                            }
+                    GestureDetector(
+                      onTap: () async {
+                        var bodyData = {
+                          "user":
+                          {
+                            "email": _email.text.toString(),
+                            "password": _password.text.toString()
                           },
-                          child:  Consumer<LoginProvider>(
+                          "portal":"preparation"
+                        };
+                        if(_email.text.isNotEmpty && _password.text.isNotEmpty){
+                          WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+                            await Provider.of<LoginProvider>(context, listen: false).grantAccess(json.encode(bodyData));
+                            SharedPreferences prefs = await SharedPreferences.getInstance();
+                            var role = prefs.getString('Role');
+                            print(role);
+                            var role1 = await sharedPref().getSharedPref('role');
+                            print(role1);
+                            Navigator.of(context).pushReplacement(MaterialPageRoute(
+                              builder: (context) =>  Dashboard(role == "mentor" ? mentor : role == "hr" ? hr : []),
+                            ));
+                          });
+
+                        }else{
+                          print('Authenticate fails');
+                          FToast().showToast(child: toast,
+                              toastDuration: Duration(seconds: 2),
+                              positionedToastBuilder: (context, child) {
+                                return Positioned(
+                                  child: child,
+                                  top: 16.0,
+                                  left: 16.0,
+                                );
+                              }
+                          );
+                        }
+                      },
+                      child: Container(
+                        height: 40.0,
+                        child: Material(
+                          borderRadius: BorderRadius.circular(20.0),
+                          shadowColor: Colors.greenAccent,
+                          color: Colors.green,
+                          elevation: 7.0,
+                          child: Consumer<LoginProvider>(
                             builder: (_,loginModel,model) {
                               return  Center(
                                 child: (!loginModel.isLoading)? Text(

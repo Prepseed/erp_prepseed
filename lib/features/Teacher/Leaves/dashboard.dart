@@ -1,18 +1,11 @@
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-
 import '../../BottomNavigation/bottom_navigation.dart';
 
-
-
-
+// ignore: must_be_immutable
 class Dashboard extends StatefulWidget {
 
   List items;
-   Dashboard(this.items);
+   Dashboard(this.items, {Key? key}) : super(key: key);
   @override
   State<Dashboard> createState() => _DashboardState();
 }
@@ -26,14 +19,14 @@ class _DashboardState extends State<Dashboard> {
         appBar: AppBar(
           elevation: 0.2,
           backgroundColor: Colors.white,
-          title: Text("Dashboard",style: TextStyle(color: Colors.black),),
+          title: const Text("Dashboard",style: TextStyle(color: Colors.black),),
           centerTitle: true,
         ),
         body: Stack(
           //alignment: Alignment.topCenter,
           children: [
             Container(
-              padding: EdgeInsets.all(10.0),
+              padding: const EdgeInsets.all(10.0),
                 child:  GridView.builder(
                     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
@@ -50,13 +43,13 @@ class _DashboardState extends State<Dashboard> {
                           ),
                           elevation: 2,
                           child: Container(
-                            padding: EdgeInsets.all(10.0),
+                            padding: const EdgeInsets.all(10.0),
                             height: 150.0,
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Image.asset("assets/images/Seelect Date Icon.png"),
-                                SizedBox(height: 10.0,),
+                                const SizedBox(height: 10.0,),
                                 Text(widget.items[index]['name'].toString(),textAlign: TextAlign.center,),
                               ],
                             ),
@@ -68,152 +61,10 @@ class _DashboardState extends State<Dashboard> {
                       );
                     }
                 )
-
-              /*ListView(
-                physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Container(
-                          padding: EdgeInsets.all(10.0),
-                          child: InkWell(
-                              child: Card(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                elevation: 5,
-                                child: Container(
-                                  padding: EdgeInsets.all(10.0),
-                                  height: 150.0,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Image.asset("assets/images/Seelect Date Icon.png"),
-                                      SizedBox(height: 10.0,),
-                                      Text('Expenses',textAlign: TextAlign.justify,),
-                                      Text('Management',textAlign: TextAlign.justify,)
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              onTap: () async {
-                                *//* await Provider.of<LeaveReqProvider>(context,listen: false).getLeaves();
-                                          Navigator.of(context).pushReplacement(MaterialPageRoute(
-                                              builder: (context) => LeaveLists())
-                                          );*//*
-                              }
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Container(
-                          padding: EdgeInsets.all(10.0),
-                          child: InkWell(
-                              child: Card(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                elevation: 5,
-                                child: Container(
-                                  padding: EdgeInsets.all(10.0),
-                                  height: 150.0,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Image.asset("assets/images/Seelect Date Icon.png"),
-                                      SizedBox(height: 10.0,),
-                                      Text('Payroll',textAlign: TextAlign.justify,),
-                                      Text('Management',textAlign: TextAlign.justify,)
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              onTap: () async {
-                                *//* await Provider.of<LeaveReqProvider>(context,listen: false).getLeaves();
-                                      Navigator.of(context).pushReplacement(MaterialPageRoute(
-                                          builder: (context) => LeaveLists())
-                                      );*//*
-                              }
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Container(
-                          padding: EdgeInsets.all(10.0),
-                          child: InkWell(
-                              child: Card(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                elevation: 5,
-                                child: Container(
-                                  padding: EdgeInsets.all(10.0),
-                                  height: 150.0,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Image.asset("assets/images/Seelect Date Icon.png"),
-                                      SizedBox(height: 10.0,),
-                                      Text('File',textAlign: TextAlign.justify,),
-                                      Text('Management',textAlign: TextAlign.justify,)
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              onTap: () async {
-                                *//* await Provider.of<LeaveReqProvider>(context,listen: false).getLeaves();
-                                          Navigator.of(context).pushReplacement(MaterialPageRoute(
-                                              builder: (context) => LeaveLists())
-                                          );*//*
-                              }
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Container(
-                          padding: EdgeInsets.all(10.0),
-                          child: InkWell(
-                              child: Card(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                elevation: 5,
-                                child: Container(
-                                  padding: EdgeInsets.all(10.0),
-                                  height: 150.0,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Image.asset("assets/images/Seelect Date Icon.png"),
-                                      SizedBox(height: 10.0,),
-                                      Text('Employee',textAlign: TextAlign.justify,),
-                                      Text('Management',textAlign: TextAlign.justify,)
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              onTap: () async {
-                                       Navigator.of(context).push(MaterialPageRoute(
-                                          builder: (context) => Dashboard())
-                                      );
-                              }
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),*/
             ),
           ],
         ),
-        bottomNavigationBar: BottomNavigation(),
+        bottomNavigationBar: const BottomNavigation(),
       ),
     );
   }
