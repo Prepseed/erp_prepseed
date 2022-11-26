@@ -163,7 +163,7 @@ class _LeaveListsState extends State<LeaveLists> {
             : Center(child: CircularProgressIndicator(),),
             role != null ? role != 'hr' ? const SizedBox(height: 20.0,) : Container(): Container(),
             Expanded(
-              child:  DefaultTabController(
+              child: LeavesAction() /* DefaultTabController(
                 length: 2,
                 child: Column(
                   children: [
@@ -171,9 +171,18 @@ class _LeaveListsState extends State<LeaveLists> {
                       margin: const EdgeInsets.symmetric(horizontal: 10.0),
                       width: MediaQuery.of(context).size.width,
                       child: TabBar(
-                        indicator: const BoxDecoration(
+                        indicator:  BoxDecoration(
                           borderRadius:  BorderRadius.all(Radius.circular(10.0)),
-                          color: Colors.blue,
+                         // color: Colors.blue,
+                          gradient: LinearGradient(
+                            colors: <Color>[
+                              Colors.blue.shade200,
+                              Colors.blueAccent.shade200,
+                              Colors.blue.shade200,
+                            ],
+                            begin: Alignment.bottomLeft,
+                            end: Alignment.bottomRight,
+                          ),
                         ),
                         labelColor: Colors.white,
                         unselectedLabelColor: Colors.black,
@@ -197,7 +206,7 @@ class _LeaveListsState extends State<LeaveLists> {
                     ),
                   ],
                 ),
-              )
+              )*/
             ),
           ],
         ),
@@ -216,11 +225,45 @@ class _LeaveListsState extends State<LeaveLists> {
       /*    Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => AddNewLeaveReq()));*/
         },
-        child: const Icon(Icons.add),
+        child:  Container(
+            width: 60,
+            height: 60,
+            padding: EdgeInsets.all(10.0),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+           //   borderRadius: BorderRadius.all(Radius.circular(50.0)),
+              gradient:  LinearGradient(
+                colors: <Color>[
+                  Colors.blue.shade600,
+                  Colors.white,
+                  Colors.blue.shade200,
+                ],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomRight,
+              ),
+            ),
+            child: Icon(Icons.add,size: 25.0,color: Colors.blue,) /*GradientIcon(
+                                        calendar_view_month_outlined,
+                                        25,
+                                        LinearGradient(
+                                          colors: <Color>[
+                                            Constants.white,
+                                            Constants.white,
+                                            Constants.white,
+                                          ],
+                                          begin: Alignment.topLeft,
+                                          end: Alignment.bottomRight,
+                                        ),
+                                      ),*/
+        ),
       ),
     );
   }
 
+  /*Widget LeavesAction(){
+    return
+  }
+  */
   TextStyle textStyle = const TextStyle(
     color: Colors.black,
     fontSize: 13.0,

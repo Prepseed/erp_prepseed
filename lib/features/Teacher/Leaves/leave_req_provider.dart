@@ -17,6 +17,7 @@ class LeaveReqProvider extends ChangeNotifier{
     final response = await _helper.get(url);
     leavesModelRequest = LeavesModel.fromJson(response);
     leaves();
+
     notifyListeners();
   }
 
@@ -25,6 +26,13 @@ class LeaveReqProvider extends ChangeNotifier{
     String url = "https://napi.prepseed.com/leaves?format=user&startDate=11/21/2022&endDate=12/31/2022";
     final response = await _helper.get(url);
     leavesModel = LeavesModel.fromJson(response);
+    leavesModelRequest.leaves!.forEach((elementReq) {
+      leavesModel.leaves!.forEach((element) {
+        if(elementReq.user!.sId == element.user!.sId){
+          element.leavesStatus!.addAll(elementReq.leavesStatus!);
+        }
+      });
+    });
     notifyListeners();
   }
 

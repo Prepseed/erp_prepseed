@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-
+import 'package:intl/intl.dart';
 import 'leave_req_provider.dart';
 import 'leaves_model.dart';
 
@@ -350,7 +350,7 @@ class _LeavesActionState extends State<LeavesAction> {
                     ),
                   ),
                   const SizedBox(height: 10.0,),
-                  listView(leaves.leavesStatus!)
+                  listView(leaves)
                 ],
               ),
            );
@@ -383,14 +383,14 @@ class _LeavesActionState extends State<LeavesAction> {
           ),
           const SizedBox(height: 15.0,),
           Expanded(
-           child: listView(list),
+           child: listView(leaves),
          )
         ],
       ) : Container();
   }
   
-  listView(List<LeavesStatus> list){
-
+  listView(Leaves leaves){
+    List<LeavesStatus> list = leaves.leavesStatus!;
     return ListView.builder(
       physics: BouncingScrollPhysics(),
       shrinkWrap: true,
@@ -414,12 +414,40 @@ class _LeavesActionState extends State<LeavesAction> {
                       child: Text(list[ind].type.toString(),style: const TextStyle(
                           letterSpacing: 1.0
                       ))),
-                  SizedBox(
-                    width: 70.0,
-                    child:list[ind].rejected == true ? const Text('Rejected',textAlign: TextAlign.center,style:  TextStyle(color: Colors.red),)
-                        : list[ind].granted == true ? const Text('Approved',textAlign: TextAlign.center,style:  TextStyle(color: Colors.green))
-                        : const Text('Pending'),
-                  )
+                  role != 'hr' ? SizedBox(
+                    width: 60.0,
+                    child:list[ind].rejected == true ? const Text('Rejected',style:  TextStyle(color: Colors.red),)
+                        : list[ind].granted == true ? const Text('Approved',style:  TextStyle(color: Colors.green))
+                        :  Text('Pending',style: TextStyle(color: Colors.orange.shade800),),
+                  ) : list[ind].rejected == true ? const Text('Rejected',style:  TextStyle(color: Colors.red),)
+                      : list[ind].granted == true ? const Text('Approved',style:  TextStyle(color: Colors.green))
+                      :  Row(
+                    children: [
+                      InkWell(
+                        child: Container(
+                          decoration: const BoxDecoration(
+                              shape: BoxShape.circle
+                          ),
+                          child: const Icon(Icons.cancel),
+                        ),
+                        onTap: (){
+                          alertDialog(leaves.sId.toString(),list[ind].date.toString(),'Reject');
+                        },
+                      ),
+                      const SizedBox(width: 10.0,),
+                      InkWell(
+                        child: Container(
+                          decoration: const BoxDecoration(
+                              shape: BoxShape.circle
+                          ),
+                          child: const Icon(Icons.task_alt),
+                        ),
+                        onTap: () async {
+                          alertDialog(leaves.sId.toString(),list[ind].date.toString(),'Approve');
+                        },
+                      )
+                    ],
+                  ),
                 ],
               ),
               const SizedBox(height: 10.0,)
@@ -427,6 +455,75 @@ class _LeavesActionState extends State<LeavesAction> {
           ),
         );
       },
+    );
+  }
+
+  alertDialog(String id, String date, String action){
+    return showDialog(
+        context: context,
+        builder: (cnt){
+          var fromDateTime = DateTime.parse(date.toString());
+          var fromDateParse = DateFormat("yyyy-MM-dd HH:mm").parse(fromDateTime.toString(), true);
+          var datesFor = DateFormat("dd-MMM-yyyy").format(fromDateParse.toLocal()).toString();
+          var dates = DateFormat("MM-dd-yyyy").format(fromDateParse.toLocal()).toString();
+          return AlertDialog(
+            elevation: 5.0,
+            shape: const RoundedRectangleBorder(
+                borderRadius:  BorderRadius.all(Radius.circular(10.0))),
+
+            title: Column(
+              children: [
+                Text('Are you sure to $action leave on \n$datesFor ?',style: const TextStyle(
+                    fontSize: 15.0,
+                    letterSpacing: 1.0,
+                    fontWeight: FontWeight.normal
+                ),textAlign: TextAlign.center),
+              ],
+            ),
+            actions: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children:  [
+                  InkWell(
+                      onTap:  () async {
+                        action == 'Approve' ? await Provider.of<LeaveReqProvider>(context,listen: false).leaveAction(id.toString(),date,"grant")
+                            : await Provider.of<LeaveReqProvider>(context,listen: false).leaveAction(id.toString(),date,"reject");
+                        Navigator.of(context).pop();
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Colors.blue,),
+                            borderRadius: const BorderRadius.all( Radius.circular(10.0))
+                        ),
+                        margin: const EdgeInsets.only(right: 10.0),
+                        padding: const EdgeInsets.all(10.0),
+                        child: Text(action.toUpperCase().toString(),style: const TextStyle(
+                            fontSize: 12.0,
+                            fontWeight: FontWeight.bold
+                        ),),
+                      )
+                  ),
+                  InkWell(
+                      onTap:  () async {
+                        Navigator.of(context).pop();
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Colors.blue,),
+                            borderRadius: const BorderRadius.all(Radius.circular(10.0))
+                        ),
+                        padding: const EdgeInsets.all(10.0),
+                        child: Text('Cancel'.toUpperCase(),style: const TextStyle(
+                            fontSize: 12.0,
+                            fontWeight: FontWeight.bold
+                        ),),
+                      )
+                  )
+                ],
+              )
+            ],
+          );
+        }
     );
   }
 
