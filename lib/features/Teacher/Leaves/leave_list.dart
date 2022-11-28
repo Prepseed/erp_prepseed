@@ -1,14 +1,13 @@
-
+import 'package:erp_prepseed/features/Teacher/Leaves/leaves_model.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../../common/functions/functions.dart';
 import 'leave_req_provider.dart';
-import 'leave_request.dart';
-import 'leaves_actions.dart';
 import 'add_new_leaves_request.dart';
-
-
+import 'package:flutter_svg/svg.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:intl/intl.dart';
 
 class LeaveLists extends StatefulWidget {
   const LeaveLists({Key? key}) : super(key: key);
@@ -82,7 +81,6 @@ class _LeaveListsState extends State<LeaveLists> {
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Row(
-                   // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
                         child: InkWell(
@@ -163,50 +161,26 @@ class _LeaveListsState extends State<LeaveLists> {
             : Center(child: CircularProgressIndicator(),),
             role != null ? role != 'hr' ? const SizedBox(height: 20.0,) : Container(): Container(),
             Expanded(
-              child: LeavesAction() /* DefaultTabController(
-                length: 2,
-                child: Column(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 10.0),
-                      width: MediaQuery.of(context).size.width,
-                      child: TabBar(
-                        indicator:  BoxDecoration(
-                          borderRadius:  BorderRadius.all(Radius.circular(10.0)),
-                         // color: Colors.blue,
-                          gradient: LinearGradient(
-                            colors: <Color>[
-                              Colors.blue.shade200,
-                              Colors.blueAccent.shade200,
-                              Colors.blue.shade200,
-                            ],
-                            begin: Alignment.bottomLeft,
-                            end: Alignment.bottomRight,
-                          ),
-                        ),
-                        labelColor: Colors.white,
-                        unselectedLabelColor: Colors.black,
-                        labelStyle: GoogleFonts.poppins(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 15
-                        ),
-                        tabs: const [
-                          Tab(text: 'Request'),
-                          Tab(text: 'Action'),
-                        ],
-                      ),
-                    ),
-                    const Expanded(
-                      child:   TabBarView(
-                        children: [
-                           LeaveRequest(),
-                          LeavesAction(),
-                        ],
-                      ),
-                    ),
-                  ],
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Consumer<LeaveReqProvider>(
+                    builder: (context,data,_) {
+                      return provMdl.leavesModel.leaves != null && provMdl.leavesModel.leaves!.isNotEmpty
+                          ?  ListView.builder(
+                        physics: const BouncingScrollPhysics(),
+                        padding: const EdgeInsets.only(top: 10.0),
+                        shrinkWrap: true,
+                        itemCount: provMdl.leavesModel.leaves!.length,
+                        itemBuilder: (context,index){
+                          return  role != 'hr'
+                              ? employeeWidget(provMdl.leavesModel.leaves![index])
+                              : hrWidget(provMdl.leavesModel.leaves![index]);
+                        },
+                      )
+                          : const Center(child: Text('No Leaves'));
+                    }
                 ),
-              )*/
+              )
             ),
           ],
         ),
@@ -214,7 +188,7 @@ class _LeaveListsState extends State<LeaveLists> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
         onPressed: (){
-          Navigator.push(
+          Navigator.pushReplacement(
             context,
             PageRouteBuilder(
               pageBuilder: (_, __, ___) => const AddNewLeaveReq(),
@@ -222,8 +196,6 @@ class _LeaveListsState extends State<LeaveLists> {
               transitionsBuilder: (_, a, __, c) => FadeTransition(opacity: a, child: c),
             ),
           );
-      /*    Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => AddNewLeaveReq()));*/
         },
         child:  Container(
             width: 60,
@@ -231,39 +203,244 @@ class _LeaveListsState extends State<LeaveLists> {
             padding: EdgeInsets.all(10.0),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-           //   borderRadius: BorderRadius.all(Radius.circular(50.0)),
-              gradient:  LinearGradient(
-                colors: <Color>[
-                  Colors.blue.shade600,
-                  Colors.white,
-                  Colors.blue.shade200,
-                ],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomRight,
-              ),
             ),
-            child: Icon(Icons.add,size: 25.0,color: Colors.blue,) /*GradientIcon(
-                                        calendar_view_month_outlined,
-                                        25,
-                                        LinearGradient(
-                                          colors: <Color>[
-                                            Constants.white,
-                                            Constants.white,
-                                            Constants.white,
-                                          ],
-                                          begin: Alignment.topLeft,
-                                          end: Alignment.bottomRight,
-                                        ),
-                                      ),*/
+            child: Icon(Icons.add,size: 25.0,color: Colors.white,)
         ),
       ),
     );
   }
 
-  /*Widget LeavesAction(){
-    return
+  hrWidget(Leaves leaves){
+    String? subSvg;
+    String? img;
+    if(leaves.user != null){
+      if(leaves.user!.dp != null){
+        subSvg =leaves.user!.dp.toString();
+        img = subSvg.split('.').last;
+      }
+    }
+    return Container(
+      padding: const EdgeInsets.all(10.0),
+      margin: const EdgeInsets.only(top: 10.0,bottom: 10.0),
+      decoration: BoxDecoration(
+        borderRadius: const BorderRadius.all( Radius.circular(10.0)),
+        border: Border.all(
+          color: Colors.grey,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          InkWell(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                subSvg == null ?
+                Container()
+                    : img!.contains('svg')
+                    ? SvgPicture.network(
+                  leaves.user!.dp.toString(),
+                  fit: BoxFit.contain,
+                  height: 40.0,
+                ) : CachedNetworkImage(imageUrl: subSvg,height: 45.0,),
+                const SizedBox(width: 10.0,),
+                Text( leaves.user!.name.toString())
+              ],
+            ),
+            onTap:(){
+              /*  onTaps(leaves);*/
+            },
+          ),
+          const SizedBox(height: 10.0,),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children:const [
+                Text('Date'),
+                Text('Type'),
+                Text('Status'),
+              ],
+            ),
+          ),
+          const SizedBox(height: 10.0,),
+          listView(leaves)
+        ],
+      ),
+    );
   }
-  */
+
+  employeeWidget(Leaves leaves){
+    List<LeavesStatus> list = leaves.leavesStatus!;
+    return userId == leaves.user!.sId
+    ? ListView(
+      physics: NeverScrollableScrollPhysics(),
+      padding: const EdgeInsets.all(10.0),
+      shrinkWrap: true,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: const [
+              Text('Date',style: TextStyle(
+                  fontWeight: FontWeight.bold
+              ),),
+              Text('Type',style: TextStyle(
+                  fontWeight: FontWeight.bold
+              )),
+              Text('Status',style: TextStyle(
+                  fontWeight: FontWeight.bold
+              )),
+            ],
+          ),
+        ),
+        const SizedBox(height: 15.0,),
+        Expanded(
+          child: listView(leaves),
+        )
+      ],
+    ) : Container();
+  }
+
+  listView(Leaves leaves){
+    List<LeavesStatus> list = leaves.leavesStatus!;
+    return ListView.builder(
+      physics: BouncingScrollPhysics(),
+      shrinkWrap: true,
+      itemCount: list.length,
+      itemBuilder: (context,ind){
+        String fromDate = Functions().dateFormatter(list[ind].date.toString());
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children:  [
+                  SizedBox(
+                      width: 100.0,
+                      child: Text(fromDate.toString(),style: const TextStyle(
+                          letterSpacing: 1.0
+                      ),)),
+                  SizedBox(
+                      width: 90.0,
+                      child: Text(list[ind].type.toString(),style: const TextStyle(
+                          letterSpacing: 1.0
+                      ))),
+                  role != 'hr' ? SizedBox(
+                    width: 60.0,
+                    child:list[ind].rejected == true ? const Text('Rejected',style:  TextStyle(color: Colors.red),)
+                        : list[ind].granted == true ? const Text('Approved',style:  TextStyle(color: Colors.green))
+                        :  Text('Pending',style: TextStyle(color: Colors.orange.shade800),),
+                  ) : list[ind].rejected == true ? const Text('Rejected',style:  TextStyle(color: Colors.red),)
+                      : list[ind].granted == true ? const Text('Approved',style:  TextStyle(color: Colors.green))
+                  :  Row(
+                    children: [
+                      InkWell(
+                        child: Container(
+                          decoration: const BoxDecoration(
+                              shape: BoxShape.circle
+                          ),
+                          child: const Icon(Icons.cancel),
+                        ),
+                        onTap: (){
+                          alertDialog(leaves.sId.toString(),list[ind].date.toString(),'Reject');
+                        },
+                      ),
+                      const SizedBox(width: 10.0,),
+                      InkWell(
+                        child: Container(
+                          decoration: const BoxDecoration(
+                              shape: BoxShape.circle
+                          ),
+                          child: const Icon(Icons.task_alt),
+                        ),
+                        onTap: () async {
+                          alertDialog(leaves.sId.toString(),list[ind].date.toString(),'Approve');
+                        },
+                      )
+                    ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10.0,)
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  alertDialog(String id, String date, String action){
+    return showDialog(
+        context: context,
+        builder: (cnt){
+          var fromDateTime = DateTime.parse(date.toString());
+          var fromDateParse = DateFormat("yyyy-MM-dd HH:mm").parse(fromDateTime.toString(), true);
+          var datesFor = DateFormat("dd-MMM-yyyy").format(fromDateParse.toLocal()).toString();
+          var dates = DateFormat("MM-dd-yyyy").format(fromDateParse.toLocal()).toString();
+          return AlertDialog(
+            elevation: 5.0,
+            shape: const RoundedRectangleBorder(
+                borderRadius:  BorderRadius.all(Radius.circular(10.0))),
+
+            title: Column(
+              children: [
+                Text('Are you sure to $action leave on \n$datesFor ?',style: const TextStyle(
+                    fontSize: 15.0,
+                    letterSpacing: 1.0,
+                    fontWeight: FontWeight.normal
+                ),textAlign: TextAlign.center),
+              ],
+            ),
+            actions: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children:  [
+                  InkWell(
+                      onTap:  () async {
+                        action == 'Approve' ? await Provider.of<LeaveReqProvider>(context,listen: false).leaveAction(id.toString(),date,"grant")
+                            : await Provider.of<LeaveReqProvider>(context,listen: false).leaveAction(id.toString(),date,"reject");
+                        Navigator.of(context).pop();
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Colors.blue,),
+                            borderRadius: const BorderRadius.all( Radius.circular(10.0))
+                        ),
+                        margin: const EdgeInsets.only(right: 10.0),
+                        padding: const EdgeInsets.all(10.0),
+                        child: Text(action.toUpperCase().toString(),style: const TextStyle(
+                            fontSize: 12.0,
+                            fontWeight: FontWeight.bold
+                        ),),
+                      )
+                  ),
+                  InkWell(
+                      onTap:  () async {
+                        Navigator.of(context).pop();
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Colors.blue,),
+                            borderRadius: const BorderRadius.all(Radius.circular(10.0))
+                        ),
+                        padding: const EdgeInsets.all(10.0),
+                        child: Text('Cancel'.toUpperCase(),style: const TextStyle(
+                            fontSize: 12.0,
+                            fontWeight: FontWeight.bold
+                        ),),
+                      )
+                  )
+                ],
+              )
+            ],
+          );
+        }
+    );
+  }
+
   TextStyle textStyle = const TextStyle(
     color: Colors.black,
     fontSize: 13.0,

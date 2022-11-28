@@ -1,33 +1,14 @@
 import 'dart:convert';
 
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
-
 import 'package:provider/provider.dart';
-import '../../../common/constant/color_palate.dart';
-import '../../../common/constant/icon.dart';
 import 'leave_list.dart';
 import 'leave_req_provider.dart';
-import 'leaves_actions.dart';
 
-/*class AddNewLeaveReq extends StatelessWidget {
-  const AddNewLeaveReq({Key? key}) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return ScreenUtilInit(
-      designSize: const Size(414, 896),
-      builder: (BuildContext context, Widget? child) {
-        return const MaterialApp(
-          debugShowCheckedModeBanner: false,
-          home:  LeaveAndReport(),
-        );
-      },
-    );
-  }
-}*/
+
 class AddNewLeaveReq extends StatefulWidget {
   const AddNewLeaveReq({Key? key}) : super(key: key);
 
@@ -59,7 +40,7 @@ class _LeaveAndReportState extends State<AddNewLeaveReq> {
   bool toEmpty = false;
   bool sameDate = false;
   bool types = false;
- // static const IconData calendar_view_month_outlined = IconData(0xef13, fontFamily: 'MaterialIcons');
+
   static const IconData calendar_view_month_outlined = IconData(0xe122, fontFamily: 'MaterialIcons');
   static const IconData descriprion_icon =IconData(0xf5d6, fontFamily: 'MaterialIcons');
   static const IconData type_icon =IconData(0xf02c3, fontFamily: 'MaterialIcons');
@@ -88,9 +69,6 @@ class _LeaveAndReportState extends State<AddNewLeaveReq> {
                     child: const Icon(Icons.arrow_back_ios_new,size: 15.0,color: Colors.black,),
                   ),
                   onTap: (){
-                    /*  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    builder: (context) => const LeaveLists())
-                );*/
                     Navigator.pop(context, "");
                   },
                 ),
@@ -163,31 +141,10 @@ class _LeaveAndReportState extends State<AddNewLeaveReq> {
                                       padding: EdgeInsets.all(10.0),
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                                        gradient:  LinearGradient(
-                                          colors: <Color>[
-                                            Colors.blue.shade200,
-                                            Colors.white,
-                                            Colors.blue.shade200,
-                                          ],
-                                          begin: Alignment.topCenter,
-                                          end: Alignment.bottomRight,
-                                        ),
+                                        gradient: gradient
                                       ),
-                                      child: Icon(calendar_view_month_outlined,size: 21.0,color: Colors.blue,) /*GradientIcon(
-                                        calendar_view_month_outlined,
-                                        25,
-                                        LinearGradient(
-                                          colors: <Color>[
-                                            Constants.white,
-                                            Constants.white,
-                                            Constants.white,
-                                          ],
-                                          begin: Alignment.topLeft,
-                                          end: Alignment.bottomRight,
-                                        ),
-                                      ),*/
+                                      child: Icon(calendar_view_month_outlined,size: 21.0,color: Colors.blue,)
                                     ),
-                                   // Image.asset("assets/images/Seelect Date Icon.png"),
                                     Expanded(
                                         child: Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -266,7 +223,6 @@ class _LeaveAndReportState extends State<AddNewLeaveReq> {
                                                     border: const OutlineInputBorder(
                                                       borderRadius: BorderRadius.all(Radius.circular(10.0)),
                                                     ),
-                                                    // icon: Icon(Icons.calendar_today), //icon of text field
                                                     labelText: "To Date",
                                                     labelStyle: textStyle  //label text of field
                                                 ),
@@ -336,31 +292,10 @@ class _LeaveAndReportState extends State<AddNewLeaveReq> {
                                         padding: EdgeInsets.all(10.0),
                                         decoration: BoxDecoration(
                                           borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                                          gradient:  LinearGradient(
-                                            colors: <Color>[
-                                              Colors.blue.shade200,
-                                              Colors.white,
-                                              Colors.blue.shade200,
-                                            ],
-                                            begin: Alignment.topCenter,
-                                            end: Alignment.bottomRight,
-                                          ),
+                                          gradient: gradient
                                         ),
-                                        child: Icon(type_icon,size: 21.0,color: Colors.blue,) /*GradientIcon(
-                                        calendar_view_month_outlined,
-                                        25,
-                                        LinearGradient(
-                                          colors: <Color>[
-                                            Constants.white,
-                                            Constants.white,
-                                            Constants.white,
-                                          ],
-                                          begin: Alignment.topLeft,
-                                          end: Alignment.bottomRight,
-                                        ),
-                                      ),*/
+                                        child: Icon(type_icon,size: 21.0,color: Colors.blue,)
                                     ),
-                                   /* Image.asset("assets/images/Type.png"),*/
                                     // SizedBox(width: 20,),
                                     Expanded(
                                       child: Column(
@@ -375,7 +310,6 @@ class _LeaveAndReportState extends State<AddNewLeaveReq> {
                                                 color: Colors.transparent,
                                                 borderRadius: const BorderRadius.all(Radius.circular(10.0)),
                                                 border: Border.all(color: Colors.black45),
-                                                // boxShadow: [BoxShadow(blurRadius: 10,color: Colors.black45,offset: Offset(3,3))]
                                               ),
                                               child: DropdownButton<String>(
                                                 hint: Text("Select Leave Type",
@@ -438,7 +372,6 @@ class _LeaveAndReportState extends State<AddNewLeaveReq> {
                                                   color: Colors.transparent,
                                                   borderRadius: const BorderRadius.all(Radius.circular(10.0)),
                                                   border: Border.all(color: Colors.black45),
-                                                  // boxShadow: [BoxShadow(blurRadius: 10,color: Colors.black45,offset: Offset(3,3))]
                                                 ),
                                                 child: DropdownButton<String>(
                                                   hint: Text("Select Leave Type",
@@ -507,32 +440,10 @@ class _LeaveAndReportState extends State<AddNewLeaveReq> {
                                         padding: EdgeInsets.all(10.0),
                                         decoration: BoxDecoration(
                                           borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                                          gradient:  LinearGradient(
-                                            colors: <Color>[
-                                              Colors.blue.shade200,
-                                              Colors.white,
-                                              Colors.blue.shade200,
-                                            ],
-                                            begin: Alignment.topCenter,
-                                            end: Alignment.bottomRight,
-                                          ),
+                                          gradient: gradient
                                         ),
-                                        child: Icon(descriprion_icon,size: 21.0,color: Colors.blue,) /*GradientIcon(
-                                        calendar_view_month_outlined,
-                                        25,
-                                        LinearGradient(
-                                          colors: <Color>[
-                                            Constants.white,
-                                            Constants.white,
-                                            Constants.white,
-                                          ],
-                                          begin: Alignment.topLeft,
-                                          end: Alignment.bottomRight,
-                                        ),
-                                      ),*/
+                                        child: Icon(descriprion_icon,size: 21.0,color: Colors.blue,)
                                     ),
-                                   /* Image.asset("assets/images/Cause.png"),*/
-                                    // SizedBox(width: 20,),
                                     Expanded(
                                         child:   Container(
                                           margin: const EdgeInsets.all( 10.0),
@@ -584,11 +495,6 @@ class _LeaveAndReportState extends State<AddNewLeaveReq> {
                               }
                             });
                           }
-
-                          /* leavesReq.forEach((element) {
-                                list.add(element.values.toList());
-                              });*/
-                         // await Provider.of<LeaveReqProvider>(context,listen: false).leaveReq(json.encode(data));
                           if(!(types == true &&  toEmpty == true && fromEmpty == true)){
                             Map data = isMultipleDay ? {
                               "fromDate": DateFormat('MM-dd-yyyy').format(fromDate!),
@@ -622,7 +528,6 @@ class _LeaveAndReportState extends State<AddNewLeaveReq> {
                             fullDays = [];
                             leavesReq = [];
                           });
-                          // Navigator.of(context).push(MaterialPageRoute(builder: (context)=>MyHomeScreen()));
                         },
                         child: Container(
                           margin: const EdgeInsets.all(15.0),
@@ -631,81 +536,9 @@ class _LeaveAndReportState extends State<AddNewLeaveReq> {
                           width: double.infinity,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                            gradient:  LinearGradient(
-                              colors: <Color>[
-
-                                Colors.blue.shade200,
-                                Colors.blueAccent.shade200,
-                                Colors.blue.shade200,
-
-                              ],
-                              begin: Alignment.bottomLeft,
-                              end: Alignment.bottomRight,
-                            ),
+                            gradient: gradient
                           ),
                           child:  Center(child: days.length >= 1 ? Text("Apply For ${days.length} Days Leave",style: textStyle,) :  Text("Apply For Leave",style: textStyle,))
-
-                      /* Consumer<LeaveReqProvider>(
-                              builder: (context,data, _) {
-                                return *//*ElevatedButton(
-                                  style:ElevatedButton.styleFrom(
-                                    shadowColor: Colors.transparent,
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(10)
-                                      ),
-                                    primary: Colors.transparent
-                                     ),
-                                  onPressed: () async {
-                                    if(days.length >= 1){
-                                      // onTap("SuccessDully Added");
-                                    }
-                                    else{
-                                      setState(() {
-                                        fromEmpty = true;
-                                        toEmpty = true;
-                                        types = true;
-                                      });
-                                    }
-                                    Map data = isMultipleDay ? {
-                                      "fromDate": DateFormat('MM-dd-yyyy').format(fromDate!),
-                                      "toDate": DateFormat('MM-dd-yyyy').format(toDate!),
-                                      'leaves': leavesReq, // this is a List
-                                    } :
-                                    {
-                                      "fromDate": DateFormat('MM-dd-yyyy').format(fromDate!),
-                                      "toDate": DateFormat('MM-dd-yyyy').format(fromDate!),
-                                      'leaves':  [
-                                        {
-                                          "date": DateFormat('MM-dd-yyyy').format(fromDate!),
-                                          "fullDay" : isFullDay,
-                                          "type" : dropdownValue
-                                        }
-                                      ], // this is a List
-                                    };
-                                    *//**//* leavesReq.forEach((element) {
-                                list.add(element.values.toList());
-                              });*//**//*
-                                    await Provider.of<LeaveReqProvider>(context,listen: false).leaveReq(json.encode(data));
-                                    String? msg;
-                                    msg =  Provider.of<LeaveReqProvider>(context,listen: false).msg.toString();
-                                    msg.isNotEmpty ? onTaps(msg) : null;
-
-                                    fromController.clear();
-                                    toController.clear();
-                                    reasonController.clear();
-                                    setState(() {
-                                      dropdownValue == null;
-                                      days = [];
-                                      type = [];
-                                      fullDays = [];
-                                      leavesReq = [];
-                                    });
-                                    // Navigator.of(context).push(MaterialPageRoute(builder: (context)=>MyHomeScreen()));
-                                  },
-                                  child: days.length >= 1 ? Text("Apply For ${days.length} Days Leave") : const Text("Apply For Leave"),
-                                );*//*
-                              }
-                          ),*/
                         ),
                       );
                     }
@@ -718,7 +551,6 @@ class _LeaveAndReportState extends State<AddNewLeaveReq> {
       ),
     );
   }
-
 
   onTaps(String msg){
     showDialog(
@@ -737,7 +569,7 @@ class _LeaveAndReportState extends State<AddNewLeaveReq> {
                 onPressed: (){
                   Navigator.pop(ctx);
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (context) =>  const LeavesAction()));
+                      builder: (context) =>  const LeaveLists()));
                 },
                 child: const Text('Ok')
             )
@@ -745,6 +577,7 @@ class _LeaveAndReportState extends State<AddNewLeaveReq> {
         )
     );
   }
+
   void toggleSwitch(bool value) {
 
     if(isMultipleDay == false)
@@ -771,6 +604,7 @@ class _LeaveAndReportState extends State<AddNewLeaveReq> {
       print('Switch Button is OFF');
     }
   }
+
    fullDay(bool value) {
 
     if(isFullDay == false)
@@ -788,7 +622,18 @@ class _LeaveAndReportState extends State<AddNewLeaveReq> {
       print('Half Day');
     }
   }
+
   TextStyle textStyle = const TextStyle(
   color: Colors.black54,fontSize: 14,fontWeight: FontWeight.w500,
+  );
+
+  LinearGradient gradient = LinearGradient(
+    colors: <Color>[
+      Colors.blue.shade200,
+      Colors.white,
+      Colors.blue.shade200,
+    ],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomRight,
   );
 }
